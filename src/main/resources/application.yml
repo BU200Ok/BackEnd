@@ -9,7 +9,7 @@ spring:
   mail:
     host: smtp.naver.com
     port: 587
-    username: wja
+    username:
     password:
     properties:
       smtp:
