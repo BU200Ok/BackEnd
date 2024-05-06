@@ -21,6 +21,7 @@ public class JoinService {
     public void joinUser(JoinDTO joinDTO){
         Boolean isExist = userRepository.existsByAccountId(joinDTO.getAccountId());
         if(isExist){    //이미 아이디가 존재한다면?
+            System.out.println("이미 존재하는 아이디");
             return; //회원 가입 실패
         }
         //유저 정보가 없다면?

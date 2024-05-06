@@ -6,13 +6,24 @@ server:
 
 # db config
 spring:
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username:
+    password:
+    properties:
+      smtp:
+        auth: true
+      starttls:
+        enable: true
+
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver         # db driver
-    url: jdbc:mysql://localhost:3306/bu_200_groupware # db url
-    username: root                                # db username
-    password: root                      # db password
+    driver-class-name: org.mariadb.jdbc.Driver
+    url:
+    username:
+    password:
   devtools:
     restart:
       enabled: false # auto restart option enabled
