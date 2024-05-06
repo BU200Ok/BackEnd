@@ -22,7 +22,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+        String path = request.getRequestURI();
+        if (path.startsWith("/login") || path.equals("/") || path.startsWith("/join") || path.startsWith("/ws/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         System.out.println("토큰 검사하러 왔다 from JWTFilter");
         System.out.println("토큰 : "+request.getHeader("Authentication"));
         String authorization = request.getHeader("Authorization");

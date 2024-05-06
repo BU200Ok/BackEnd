@@ -9,9 +9,9 @@ spring:
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver         # db driver
-    url: jdbc:mysql://localhost:3306/bu_200_groupware # db url
-    username: root                                # db username
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://180.67.117.226:3306/groupware # db url
+    username: feeleat                                # db username
     password: root                      # db password
   devtools:
     restart:
