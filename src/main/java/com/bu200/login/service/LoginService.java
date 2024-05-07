@@ -31,7 +31,10 @@ public class LoginService {
                 messageHelper.setFrom("wjdwltjq7289@naver.com");
                 messageHelper.setTo(email);
                 messageHelper.setSubject("이메일 인증 코드입니다.");
-                messageHelper.setText("<h1>안녕하세요!</h1><p>인증 코드는 <b>"+randomCode+"</b> 입니다!</p>",true);
+                int[] digits = new int[5];
+                String numberStr = Integer.toString(randomCode);
+                for (int i = 0; i < numberStr.length(); i++) {digits[i] = numberStr.charAt(i) - '0';}
+                messageHelper.setText("<div>"+randomCode+"</div>",true);
             };
             FindAccount data = new FindAccount();
             data.setIp(ip);
