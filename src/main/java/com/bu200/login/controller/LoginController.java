@@ -2,6 +2,7 @@ package com.bu200.login.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.login.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +19,24 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @GetMapping("/send-email-for-find-accout")
-    public ResponseEntity<ResponseDTO> sendMailForFindAccount(@RequestParam String email){
-        System.out.println(email);
-        if(loginService.sendMailForFindAccount(email)){
+    @GetMapping("/send-email-for-find-account")
+    public ResponseEntity<ResponseDTO> sendMailForFindAccount(@RequestParam String email, HttpServletRequest request){
+        String ip = request.getRemoteAddr();
+        if(loginService.sendMailForFindAccount(email,ip)){
             System.out.println("성공");
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"성공",true));
         }else{
             System.out.println("실패");
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.BAD_GATEWAY,"실패",null));
         }
-
+    }
+    @GetMapping("/check-otp")
+    public ResponseEntity<ResponseDTO> checkOTP(@RequestParam Integer code,HttpServletRequest request){
+        String ip = request.getRemoteAddr();
+        if(loginService.checkOTP(code,ip)){
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"성공",true));
+        }else{
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"인증번호가 맞지 않아요",false));
+        }
     }
 }
