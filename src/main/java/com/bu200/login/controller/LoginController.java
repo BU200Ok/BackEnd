@@ -39,4 +39,16 @@ public class LoginController {
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"인증번호가 맞지 않아요",false));
         }
     }
+    @GetMapping("/get-id")
+    public  ResponseEntity<ResponseDTO> getIdFromFindAccount(@RequestParam String email){
+        try{
+            String id = loginService.getIdFromFindAccount(email);
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"아이디 찾기 성공",id));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"아이디가 없습니다.",null));
+
+        }
+    }
 }

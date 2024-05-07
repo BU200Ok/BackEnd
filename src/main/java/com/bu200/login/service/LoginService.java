@@ -1,6 +1,8 @@
 package com.bu200.login.service;
 
+import com.bu200.login.entity.Account;
 import com.bu200.login.entity.FindAccount;
+import com.bu200.login.repository.AccountRepository;
 import com.bu200.login.repository.FindAccountRepository;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,9 +16,11 @@ import java.util.Random;
 public class LoginService {
     private final JavaMailSender mailSender;
     private final FindAccountRepository findAccountRepository;
-    public LoginService(JavaMailSender mailSender, FindAccountRepository findAccountRepository) {
+    private final AccountRepository accountRepository;
+    public LoginService(JavaMailSender mailSender, FindAccountRepository findAccountRepository, AccountRepository accountRepository) {
         this.mailSender = mailSender;
         this.findAccountRepository = findAccountRepository;
+        this.accountRepository = accountRepository;
     }
     @Transactional
     public boolean sendMailForFindAccount(String email, String ip) {
@@ -49,5 +53,10 @@ public class LoginService {
         }else{
             return false;
         }
+    }
+
+    public String getIdFromFindAccount(String email) {
+        Account account = accountRepository.findByAccountEmail(email);
+        return account.getAccountId();
     }
 }
