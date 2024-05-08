@@ -12,6 +12,7 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.user = user;
+        System.out.println(user);
     }
 
     @Override
@@ -29,6 +30,13 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getPassword() {
         return user.getAccountPassword();
+    }
+
+    public String getEmail(){
+        return user.getAccountEmail();
+    }
+    public String getName(){
+        return user.getAccountName();
     }
 
     @Override

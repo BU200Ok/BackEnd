@@ -3,11 +3,13 @@ package com.bu200.security.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "account")
 @Getter
 @Setter
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +24,10 @@ public class User {
 
     @Column(name = "account_role")
     private String accountRole;
+
+    @Column(name = "account_email")
+    private String accountEmail;
+
+    @Column(name = "account_name")
+    private String accountName;
 }

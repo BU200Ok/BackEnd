@@ -27,7 +27,14 @@ public class LoginService {
                 messageHelper.setFrom("wjdwltjq7289@naver.com");
                 messageHelper.setTo(email);
                 messageHelper.setSubject("이메일 인증 코드입니다.");
-                messageHelper.setText("<h1>안녕하세요!</h1><p>인증 코드는 <b>"+randomCode+"</b> 입니다!</p>",true);
+                messageHelper.setText("<div style=\"box-shadow: 0px 4px 4px rgba(0,0,0,0.25); border-radius: 20px; width: 50%; height: 400px; background-color: #ADC7A1; margin: 0 auto;\">\n" +
+                        "    </br><h1 style=\"color: white;margin: 0 auto; text-align: center;\">회사 이름</h1>\n" +
+                        "    <hr>\n" +
+                        "    <br>\n" +
+                        "    <div style=\"color: white; text-align: center;\">아래의 코드를 입력하세요.</div><br/>\n" +
+                        "    <div style=\"box-shadow: 0px 4px 4px rgba(0,0,0,0.25); background-color: #f2eedf; width: 600px; height: 200px; border-radius: 10px; margin: 0 auto; display: flex; justify-content: center; align-items: center;\">\n" +
+                        "       <h5 style=\"font-size: 50px; margin: 0 auto; text-align: center;\">"+randomCode+"</h5></br></br>\n" +
+                        "    </div>",true);
             };
             FindAccount data = new FindAccount();
             data.setIp(ip);
