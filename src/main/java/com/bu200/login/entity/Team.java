@@ -17,7 +17,7 @@ public class Team {
     @Column(name = "team_name")
     private String teamName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "department_code")
-    private Department departmentCode;
+    private Department department;
 }
