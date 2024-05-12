@@ -1,5 +1,6 @@
 package com.bu200.login.repository;
 
+import com.bu200.login.entity.Account;
 import com.bu200.login.entity.FindAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,5 @@ public interface FindAccountRepository extends JpaRepository<FindAccount, Long> 
 
 
     void deleteByIpAndSecretCode(String ip, Integer code);
+
 }

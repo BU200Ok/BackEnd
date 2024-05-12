@@ -1,13 +1,14 @@
 package com.bu200.mypage.service;
 
 import com.bu200.login.entity.Account;
+import com.bu200.login.entity.Attendance;
 import com.bu200.mypage.repository.FindAccountDataRepository;
 import com.bu200.mypage.repository.FindMyPageProjectRepository;
+import com.bu200.mypage.repository.MyPageAttendanceRepository;
 import com.bu200.mypage.service.Dtos.MainPageDTO;
 import com.bu200.project.entity.Project;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class FindMyPageMainService {
     private final FindAccountDataRepository findAccountDataRepository;
     private final FindMyPageProjectRepository findMyPageProjectRepository;
+    private final MyPageAttendanceRepository myPageAttendanceRepository;
     private final ModelMapper modelMapper;
 
-    public FindMyPageMainService(FindAccountDataRepository findAccountDataRepository, FindMyPageProjectRepository findMyPageProjectRepository, ModelMapper modelMapper) {
+    public FindMyPageMainService(FindAccountDataRepository findAccountDataRepository, FindMyPageProjectRepository findMyPageProjectRepository, MyPageAttendanceRepository myPageAttendanceRepository, ModelMapper modelMapper) {
         this.findAccountDataRepository = findAccountDataRepository;
         this.findMyPageProjectRepository = findMyPageProjectRepository;
+        this.myPageAttendanceRepository = myPageAttendanceRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -36,10 +39,14 @@ public class FindMyPageMainService {
             if(project == null){
             throw new EntityNotFoundException("accountId:" + accountId + "인 프로젝트가 없습니다.");
              }
-            System.out.println(project);
+            Attendance attendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);
+            if(attendance == null){
+            throw new EntityNotFoundException("accountId" + accountId + "인 근태 정보가 없습니다.");
+            }
             MainPageDTO mainPageDTO = new MainPageDTO();
             modelMapper.map(account, mainPageDTO);
             modelMapper.map(project, mainPageDTO);
+            modelMapper.map(attendance, mainPageDTO);
 
             return mainPageDTO;
     }

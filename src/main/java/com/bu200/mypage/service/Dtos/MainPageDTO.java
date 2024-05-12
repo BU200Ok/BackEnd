@@ -4,6 +4,7 @@ import com.bu200.login.entity.Team;
 import lombok.*;
 import org.modelmapper.internal.bytebuddy.build.ToStringPlugin;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 //account, project, annual
@@ -33,4 +34,9 @@ public class MainPageDTO {
     private String projectDescription;  //todo
                                         //done은 뭐가 들어가지...
 
+    //마지막 근태 정보
+    private Long attendanceCode;
+    private LocalDateTime attendanceLeaveWork;     //아직 출근만 했을 시 null
+    private LocalDateTime attendanceGoWork;
+    private String attendanceStatus;                //출근 시 "출근" 퇴근 시 "퇴근"
 }
