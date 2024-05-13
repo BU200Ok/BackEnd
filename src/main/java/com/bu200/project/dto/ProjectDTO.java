@@ -2,7 +2,7 @@ package com.bu200.project.dto;
 
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,8 +10,8 @@ import java.util.List;
 public class ProjectDTO {
     private Long projectCode;
     private String projectName;
-    private Date projectStart;
-    private Date projectEnd;
+    private LocalDate projectStart;
+    private LocalDate projectEnd;
     private String projectStatus;
     private String projectDescription;
     private String projectOpenStatus;

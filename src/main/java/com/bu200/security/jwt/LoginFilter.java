@@ -65,13 +65,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accountId = customUserDetails.getUsername();
         String accountEmail = customUserDetails.getEmail();
         String accountName = customUserDetails.getName();
+        Integer accountCode = customUserDetails.getCode();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String accountRole = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(accountId, accountRole, accountEmail, accountName, 60*60*60*10L);
+        String token = jwtUtil.createJwt(accountCode ,accountId, accountRole, accountEmail, accountName, 60*60*60*10L);
 
         System.out.println("유저이름은 : "+accountId+"\n"+"유저 권한은 : "+accountRole);
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity@Table(name = "project")
@@ -21,9 +21,9 @@ public class Project {
     @Column(name = "project_name")
     private String projectName;
     @Column(name = "project_start")
-    private Date projectStart;
+    private LocalDate projectStart;
     @Column(name = "project_end")
-    private Date projectEnd;
+    private LocalDate projectEnd;
     @Column(name = "project_status")
     private String projectStatus;
     @Column(name = "project_description")
