@@ -10,4 +10,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> findAllByProjectCodeIn(List<Long> memberCode);
 
     List<Project> findAllByProjectOpenStatusTrue();
+
+    List<Project> findAllByProjectCode(Long projectCode);
+    Project findByProjectCode(Long ProjectCode);
 }
