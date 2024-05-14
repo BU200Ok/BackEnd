@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,12 +41,14 @@ public class MyPageController {
 
     //출퇴 관리
     @PostMapping("/mainpage/attendance-go-work")
-    public ResponseEntity<ResponseDTO> myPageAttendanceGo(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceGoRequestDTO MyPageAttendanceGoRequestDTO){
-        MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = myPageAttendanceService.myPageAttendanceGoService(user.getUsername(), MyPageAttendanceGoRequestDTO);
+    public ResponseEntity<ResponseDTO> myPageAttendanceGo(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceGoRequestDTO myPageAttendanceGoRequestDTO){
+        myPageAttendanceGoRequestDTO.setAttendanceGoWork(LocalDateTime.now());
+        MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = myPageAttendanceService.myPageAttendanceGoService(user.getUsername(), myPageAttendanceGoRequestDTO);
         return tool.res(HttpStatus.OK, "출근 정상 처리되었습니다.", myPageAttendanceResponseDTO);
     }
     @PostMapping("/mainpage/attendance-leave-work")
     public ResponseEntity<ResponseDTO> myPageAttendanceLeave(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceLeaveRequestDTO myPageAttendanceLeaveRequestDTO){
+        myPageAttendanceLeaveRequestDTO.setAttendanceLeaveWork(LocalDateTime.now());
         MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = myPageAttendanceService.myPageAttendanceLeaveService(user.getUsername(), myPageAttendanceLeaveRequestDTO);
         return tool.res(HttpStatus.OK, "퇴근 정상 처리되었습니다.", myPageAttendanceResponseDTO);
     }
