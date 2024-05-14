@@ -2,6 +2,7 @@ package com.bu200.project.entity;
 
 
 import com.bu200.login.entity.Account;
+import com.bu200.login.entity.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class Project {
     private String projectOpenStatus;
     @Column(name = "project_priority")
     private Integer projectPriority;
+    @JoinColumn(name = "team_code")
+    @OneToOne
+    private Team team;
 
     @JoinColumn(name = "account_code")
     @OneToOne

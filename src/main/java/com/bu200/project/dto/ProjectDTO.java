@@ -1,5 +1,7 @@
 package com.bu200.project.dto;
 
+
+import com.bu200.login.dto.TeamDTO;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ public class ProjectDTO {
     private String projectOpenStatus;
     private Integer projectPriority;
     private String accountName;
+    private TeamDTO team;
 
-    private List<String> members;
+    private List<ProjectMemberDTO> member;
 }
