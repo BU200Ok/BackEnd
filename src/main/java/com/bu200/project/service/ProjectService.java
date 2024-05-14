@@ -2,6 +2,7 @@ package com.bu200.project.service;
 
 import com.bu200.common.response.Tool;
 import com.bu200.login.entity.Account;
+import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.entity.Project;
 import com.bu200.project.entity.ProjectForum;
 import com.bu200.project.entity.ProjectForumPost;
