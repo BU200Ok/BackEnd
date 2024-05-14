@@ -12,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 //mypage의 최상단 이름, 직책 등 가져오기
@@ -35,10 +37,11 @@ public class FindMyPageMainService {
             if(account == null){
                 throw new EntityNotFoundException("accountId:" + accountId + "인 계정이 없습니다.");
             }
-            Project project = findMyPageProjectRepository.findProjectByAccount_AccountIdOrderByProjectPriority(accountId);
-            if(project == null){
+            List<Project> projects = findMyPageProjectRepository.findByAccount_AccountIdOrderByProjectPriorityDesc(accountId);
+            if(projects.isEmpty()){
             throw new EntityNotFoundException("accountId:" + accountId + "인 프로젝트가 없습니다.");
-             }
+            }
+            Project project = projects.get(0);
             Attendance attendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);
             if(attendance == null){
             throw new EntityNotFoundException("accountId" + accountId + "인 근태 정보가 없습니다.");
