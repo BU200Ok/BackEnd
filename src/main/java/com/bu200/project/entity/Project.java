@@ -30,7 +30,7 @@ public class Project {
     @Column(name = "project_description")
     private String projectDescription;
     @Column(name = "project_open_status")
-    private String projectOpenStatus;
+    private boolean projectOpenStatus;
     @Column(name = "project_priority")
     private Integer projectPriority;
     @JoinColumn(name = "team_code")
