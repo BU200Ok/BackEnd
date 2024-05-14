@@ -1,8 +1,10 @@
 package com.bu200.mypage.service;
 
+import com.bu200.exception.AlreadyGoException;
+import com.bu200.exception.AlreadyLeaveException;
+import com.bu200.exception.HaveToGoException;
 import com.bu200.login.entity.Account;
 import com.bu200.login.entity.Attendance;
-import com.bu200.login.entity.FindAccount;
 import com.bu200.login.repository.AccountRepository;
 import com.bu200.mypage.repository.MyPageAttendanceRepository;
 import com.bu200.mypage.service.Dtos.MyPageAttendanceGoRequestDTO;
@@ -11,8 +13,6 @@ import com.bu200.mypage.service.Dtos.MyPageAttendanceResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 @Service
 public class MyPageAttendanceService {
@@ -38,7 +38,7 @@ public class MyPageAttendanceService {
          */
         Attendance findAttendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);   //attendance테이블에서 마지막 출근 시간을 가져온다.
         Attendance saveAttendance = new Attendance();                                                                                   //저장할 엔티티를 생성
-        Account account = accountRepository.findByAccountId(accountId);                                                                 //새로운 attendance 필드를 추가하기 위해 account엔티티를 가져온다.\
+        Account account = accountRepository.findByAccountId(accountId);                                                       //새로운 attendance 필드를 추가하기 위해 account엔티티를 가져온다.\
         MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = new MyPageAttendanceResponseDTO();                                    //컨트롤러로 리턴할 엔티티를 생성
 
         if(findAttendance == null) {                        //처음 출근하는 경우 새로 만들어 저장
@@ -51,6 +51,7 @@ public class MyPageAttendanceService {
         }else{                                              //처음이 아닌 경우
             if(findAttendance.getAttendanceLeaveWork() == null){
                 //마지막으로 출근한 날의 퇴근 정보가 없으면(퇴근 정보가 없이, 출근 요청이 들어온 경우), 이미 출근 했습니다!출력
+                throw new AlreadyGoException("이미 출근 했습니다.");
             }else{
                 modelMapper.map(myPageAttendanceGoRequestDTO, saveAttendance);
                 saveAttendance.setAccount(account);
@@ -70,12 +71,14 @@ public class MyPageAttendanceService {
         MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = new MyPageAttendanceResponseDTO();                                    //컨트롤러로 리턴할 엔티티를 생성
         if(findAttendance == null){
          //첫출근 즉, 출근부터해라(출근하세요출력)
+            throw new HaveToGoException("출근을 하지 않았습니다.");
         }else {
             if(findAttendance.getAttendanceLeaveWork() == null){
                 modelMapper.map(myPageAttendanceLeaveRequestDTO, findAttendance);
                 modelMapper.map(findAttendance, myPageAttendanceResponseDTO);
             }else{
                 //이미 퇴근하셨습니다. 출력
+                throw new AlreadyLeaveException("이미 퇴근 처리되었습니다.");
             }
 
         }
