@@ -1,5 +1,7 @@
 package com.bu200.project.dto;
 
+import com.bu200.login.dto.TeamDTO;
+import com.bu200.login.entity.Team;
 import lombok.*;
 
 @AllArgsConstructor
@@ -11,4 +13,5 @@ public class AccountDTO {
     //account 정보
     private Long accountCode;
     private String accountName;
+    private Team team;
 }

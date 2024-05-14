@@ -29,11 +29,7 @@ public class TodoList {
 
     @Column(name = "todo_list_done")
     private boolean todoListDone;
-
-    @ManyToOne
-    @JoinColumn(name = "project_code")
-    private Project project;
-
+    
     @ManyToOne
     @JoinColumn(name = "account_code")
     private Account account;
