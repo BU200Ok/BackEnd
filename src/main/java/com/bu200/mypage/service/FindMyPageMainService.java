@@ -46,7 +46,6 @@ public class FindMyPageMainService {
             MainPageDTO mainPageDTO = new MainPageDTO();
             modelMapper.map(account, mainPageDTO);
             modelMapper.map(project, mainPageDTO);
-            modelMapper.map(attendance, mainPageDTO);
 
             return mainPageDTO;
     }
