@@ -2,11 +2,9 @@ package com.bu200.project.service;
 
 import com.bu200.common.response.Tool;
 import com.bu200.login.entity.Account;
-import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.entity.Project;
 import com.bu200.project.entity.ProjectMember;
 import com.bu200.project.repository.ProjectMemberRepository;
-import com.bu200.project.repository.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

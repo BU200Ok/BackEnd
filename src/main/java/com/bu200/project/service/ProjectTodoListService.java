@@ -1,16 +1,13 @@
 package com.bu200.project.service;
 
-import com.bu200.common.response.ResponseDTO;
 import com.bu200.login.entity.Account;
 import com.bu200.login.repository.AccountRepository;
 import com.bu200.project.dto.*;
 import com.bu200.project.entity.Project;
 import com.bu200.project.entity.TodoList;
 import com.bu200.project.repository.ProjectMemberRepository;
-import com.bu200.project.repository.ProjectRepository;
 import com.bu200.project.repository.ProjectTodoListRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
