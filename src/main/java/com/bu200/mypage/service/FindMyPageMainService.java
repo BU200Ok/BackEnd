@@ -43,9 +43,6 @@ public class FindMyPageMainService {
             }
             Project project = projects.get(0);
             Attendance attendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);
-            if(attendance == null){
-            throw new EntityNotFoundException("accountId" + accountId + "인 근태 정보가 없습니다.");
-            }
             MainPageDTO mainPageDTO = new MainPageDTO();
             modelMapper.map(account, mainPageDTO);
             modelMapper.map(project, mainPageDTO);
