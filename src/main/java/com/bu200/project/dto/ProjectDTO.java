@@ -16,7 +16,7 @@ public class ProjectDTO {
     private LocalDate projectEnd;
     private String projectStatus;
     private String projectDescription;
-    private String projectOpenStatus;
+    private boolean projectOpenStatus;
     private Integer projectPriority;
     private String accountName;
     private TeamDTO team;
