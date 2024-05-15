@@ -4,15 +4,11 @@ import com.bu200.forum.dto.ForumDTO;
 import com.bu200.forum.entity.Forum;
 import com.bu200.forum.repository.ForumRepository;
 import com.bu200.login.repository.AccountRepository;
-import com.bu200.login.repository.UserRepository;
-import com.bu200.security.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
