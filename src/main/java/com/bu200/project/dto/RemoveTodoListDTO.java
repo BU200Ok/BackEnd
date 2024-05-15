@@ -9,8 +9,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RemoveTodoListDTO {
+    private Long todoListCode;
     private String todoListName;
     private String todoListDetail;
     private LocalDate todoListStart;
-    private boolean todoListDone = true;
+    private boolean todoListDone;
 }

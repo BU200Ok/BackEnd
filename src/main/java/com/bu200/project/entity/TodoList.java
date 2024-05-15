@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity @Table(name = "todo_list")
 @Getter @Setter @NoArgsConstructor
 public class TodoList {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "todo_list_code")
     private Long todoListCode;
 
@@ -29,8 +29,11 @@ public class TodoList {
 
     @Column(name = "todo_list_done")
     private boolean todoListDone;
+
+    @JoinColumn(name = "project_forum_code")
+    private Long projectForumCode;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_code")
     private Account account;
 }

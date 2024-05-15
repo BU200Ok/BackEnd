@@ -74,6 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = jwtUtil.createJwt(accountCode ,accountId, accountRole, accountEmail, accountName, 21600000L);
 
+        System.out.println("발급받은 토큰 : " + token);
         System.out.println("유저이름은 : "+accountId+"\n"+"유저 권한은 : "+accountRole);
 
         response.addHeader("Authorization", "Bearer " + token);
