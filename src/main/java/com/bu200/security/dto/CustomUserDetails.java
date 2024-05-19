@@ -1,5 +1,6 @@
 package com.bu200.security.dto;
 
+import com.bu200.login.entity.Account;
 import com.bu200.security.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return user.getAccountId();
+    }
+
+    public Integer getAccountCode() {
+        return user.getAccountCode();
     }
 
     @Override

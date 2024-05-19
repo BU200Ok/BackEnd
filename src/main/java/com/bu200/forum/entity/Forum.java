@@ -8,12 +8,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
 @Table(name = "forum")
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Forum {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +43,8 @@ public class Forum {
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "account_code")
         private Account account;
-    }
+
+
+}
 
 

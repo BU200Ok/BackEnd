@@ -12,8 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+
 @RequestMapping("/forum")
 @Controller
 public class ForumController {
@@ -27,7 +28,7 @@ public class ForumController {
         this.tool = tool;
     }
 
-    //공지사항
+    //공지사항(전체 확인)
     @GetMapping("/public")
     public ResponseEntity<ResponseDTO> getAllDepartmentsForums(@AuthenticationPrincipal CustomUserDetails user) {
         List<ForumDTO> forums = forumService.getAllForums();
@@ -39,7 +40,6 @@ public class ForumController {
     public ResponseEntity<ResponseDTO> getDepartmentForums(@AuthenticationPrincipal CustomUserDetails user) {
         boolean isAdmin = user.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-
         if (isAdmin) {
             List<ForumDTO> forums = forumService.getAllForums();
             return tool.res(HttpStatus.OK, "Admin의 모든 포럼 데이터", forums);
@@ -50,11 +50,9 @@ public class ForumController {
         }
     }
 
-
-
-    //개인정보 가져오기
+    //개인정보 가져오기(로그인한 사용자)
     @GetMapping("/myinfo")
-    public ResponseEntity<ResponseDTO> myInfoLoding(@AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity<ResponseDTO> myInfoLoding(@AuthenticationPrincipal CustomUserDetails user) {
         System.out.println(user.getUsername());
         MainPageDTO mainPageDTO = findMyPageMainService.FindAccountData(user.getUsername());
         return tool.res(HttpStatus.OK, "mainpageDTO입니다.", mainPageDTO);
@@ -63,10 +61,45 @@ public class ForumController {
 
     // 게시글 작성
     @PostMapping("/create")
-    public ResponseEntity<Forum> createForum(@RequestBody Forum forum) {
-        Forum savedForum = forumService.saveForum(forum);
-        return ResponseEntity.ok(savedForum);
+    public ResponseEntity<ResponseDTO> createForum(@RequestBody ForumDTO forumDTO) {
+        if (forumDTO.getAccountCode() == null) {
+            return tool.res(HttpStatus.BAD_REQUEST, "accountcode 없음.", null);
+        }
+        try {
+            Forum savedForum = forumService.saveForum(forumDTO);
+            return tool.res(HttpStatus.OK, "forum 내용입니다.", savedForum);
+        } catch (IllegalArgumentException e) {
+            return tool.res(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
     }
 
 
+    // 사용자가 작성한 게시글 목록 확인
+    @GetMapping("/my-posts")
+    public ResponseEntity<ResponseDTO> getMyPosts(@AuthenticationPrincipal CustomUserDetails user) {
+        try {
+            List<ForumDTO> myPosts = forumService.findForumsByAccountCode(user.getUsername());
+            return tool.res(HttpStatus.OK, "내가 작성한 게시글 목록입니다.", myPosts);
+        } catch (Exception e) {
+            return tool.res(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+
+    //게시글 삭제
+    @DeleteMapping("/delete/{forumCode}")
+    public ResponseEntity<ResponseDTO> deleteForum(@AuthenticationPrincipal CustomUserDetails user, @PathVariable Long forumCode) {
+        Long accountCode = Long.valueOf(user.getAccountCode());
+        System.out.println(accountCode);
+        try {
+            forumService.deleteForum(forumCode, accountCode);
+            return tool.res(HttpStatus.OK, "게시글이 삭제되었습니다.", null);
+        } catch (IllegalArgumentException e) {
+            return tool.res(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
+    }
 }
+
+
+
+

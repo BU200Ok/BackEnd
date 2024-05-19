@@ -3,6 +3,7 @@ package com.bu200.forum.service;
 import com.bu200.forum.dto.ForumDTO;
 import com.bu200.forum.entity.Forum;
 import com.bu200.forum.repository.ForumRepository;
+import com.bu200.login.entity.Account;
 import com.bu200.login.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,45 @@ public class ForumService {
     }
 
 
+    // 사용자가 작성한 게시글 조회
+    public List<ForumDTO> findForumsByAccountCode(String userName) {
+        List<Forum> forums = forumRepository.findByAccount_AccountId(userName);
+        return forums.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    //AccountCode 찾기
+    public Account findByAccountCode(Long accountCode) {
+        return accountRepository.findById(accountCode).orElse(null);
+    }
+
+    // 저장
+    public Forum saveForum(ForumDTO forumDTO) {
+        Account account = findByAccountCode(forumDTO.getAccountCode());
+        if (account == null) {
+            throw new IllegalArgumentException("Account not found.");
+        }
+
+        Forum forum = convertToEntity(forumDTO);
+        forum.setAccount(account);
+
+        forum.setForumCreateTime(LocalDateTime.now());
+        forum.setForumModify(LocalDateTime.now());
+        return forumRepository.save(forum);
+    }
+
+
+    //삭제
+    public void deleteForum(Long forumCode, Long accountCode) {
+        if (!forumRepository.existsByIdAndAccount_AccountCode(forumCode, accountCode)) {
+            throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
+        }
+        forumRepository.deleteByIdAndAccount_AccountCode(forumCode, accountCode);
+    }
+
+
+    //DTO 변환
     private ForumDTO convertToDto(Forum forum) {
         ForumDTO dto = new ForumDTO();
         dto.setForumCode(forum.getForumCode());
@@ -54,11 +94,15 @@ public class ForumService {
         return dto;
     }
 
-
-    public Forum saveForum(Forum forum) {
-        forum.setForumCreateTime(LocalDateTime.now());
-        forum.setForumModify(LocalDateTime.now());
-        return forumRepository.save(forum);
+    //Entity 변환
+    private Forum convertToEntity(ForumDTO forumDTO) {
+        Forum forum = new Forum();
+        forum.setForumTitle(forumDTO.getForumTitle());
+        forum.setForumContent(forumDTO.getForumContent());
+        forum.setForumType(forumDTO.getForumType());
+        forum.setForumCreateTime(forumDTO.getForumCreateTime());
+        // 필요한 다른 필드 설정
+        return forum;
     }
 
 }
