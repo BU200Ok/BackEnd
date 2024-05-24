@@ -7,29 +7,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyGroup;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-@Entity @Table(name = "todo_list")
+@Entity @Table(name = "task_post")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
-public class TodoList {
+public class TaskPost {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "todo_list_code")
-    private Long todoListCode;
+    @Column(name = "task_post_code")
+    private Long taskPostCode;
 
-    @Column(name = "todo_list_content")
-    private String todoListContent;
+    @Column(name = "task_post_detail")
+    private String taskPostDetail;
 
     @CreationTimestamp
-    @Column(name = "todo_list_start")
-    private Timestamp todoListStart;
+    @Column(name = "task_post_time")
+    private Timestamp taskPostTime;
 
-    @Column(name = "todo_list_end")
-    private LocalDate todoListEnd;
-
-    @Column(name = "todo_list_status")
-    private Boolean todoListStatus;
+    @Column(name = "task_post_modify_time")
+    private LocalDate taskPostModifyTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_code")

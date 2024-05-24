@@ -1,25 +1,21 @@
 package com.bu200.project.dto;
 
-
-import com.bu200.login.dto.TeamDTO;
-import lombok.*;
+import com.bu200.login.entity.Team;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter@Setter@ToString
+
+@Getter@Setter@AllArgsConstructor@NoArgsConstructor
 public class ProjectDTO {
     private Long projectCode;
     private String projectName;
     private LocalDate projectStart;
     private LocalDate projectEnd;
-    private String projectStatus;
     private String projectDescription;
-    private boolean projectOpenStatus;
-    private Integer projectPriority;
-    private String accountName;
-    private TeamDTO team;
+    private String prjectStatus;
 
-    private List<ProjectMemberDTO> member;
+    private Team team;
 }

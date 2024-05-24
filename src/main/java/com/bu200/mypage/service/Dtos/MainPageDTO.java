@@ -30,7 +30,7 @@ public class MainPageDTO {
     private Date projectStart;
     private Date projectEnd;
     private Integer projectPriority;
-    private String projectOperations;   //inprogress
+    private String projectStatus;   //inprogress
     private String projectDescription;  //todo
                                         //done은 뭐가 들어가지...
 

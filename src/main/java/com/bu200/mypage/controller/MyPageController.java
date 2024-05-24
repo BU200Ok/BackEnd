@@ -36,6 +36,7 @@ public class MyPageController {
     public ResponseEntity<ResponseDTO> myPageLoding(@AuthenticationPrincipal CustomUserDetails user){
         System.out.println(user.getUsername());
         MainPageDTO mainPageDTO = findMyPageMainService.FindAccountData(user.getUsername());
+        System.out.println("/n\n\n\n\n\n\n\n\n " + mainPageDTO.toString());
         return tool.res(HttpStatus.OK, "mainpageDTO입니다.", mainPageDTO);
     }
 

@@ -1,6 +1,5 @@
 package com.bu200.project.entity;
 
-
 import com.bu200.login.entity.Account;
 import com.bu200.login.entity.Team;
 import jakarta.persistence.*;
@@ -8,39 +7,46 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Entity@Table(name = "project")
-@Setter@Getter@NoArgsConstructor@AllArgsConstructor
+@Entity @Table(name = "project")
+@Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_code")
     private Long projectCode;
+
     @Column(name = "project_name")
     private String projectName;
+
+    @CreationTimestamp
     @Column(name = "project_start")
-    private LocalDate projectStart;
+    private Timestamp projectStart;
+
     @Column(name = "project_end")
-    private LocalDate projectEnd;
-    @Column(name = "project_status")
-    private String projectStatus;
-    @Column(name = "project_description")
-    private String projectDescription;
-    @Column(name = "project_open_status")
-    private boolean projectOpenStatus;
+    private LocalDateTime localDateTime;
+
     @Column(name = "project_priority")
     private Integer projectPriority;
-    @JoinColumn(name = "team_code")
-    @OneToOne
-    private Team team;
 
+    @Column(name = "project_open_status")
+    private boolean projectOpenStatus;
+
+    @Column(name = "project_description")
+    private String projectDescription;
+
+    @Column(name = "project_status")
+    private String projectStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_code")
-    @OneToOne
     private Account account;
 
-    @OneToMany(mappedBy = "projectCode")
-    private List<ProjectMember> member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_code")
+    private Team team;
 }

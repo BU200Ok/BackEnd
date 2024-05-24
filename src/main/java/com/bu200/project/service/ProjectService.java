@@ -1,88 +1,76 @@
 package com.bu200.project.service;
 
-import com.bu200.common.response.Tool;
+import com.bu200.exception.ProjectExistException;
 import com.bu200.login.entity.Account;
+import com.bu200.login.repository.AccountRepository;
+import com.bu200.project.dto.AddProjectDTO;
 import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.entity.Project;
-import com.bu200.project.entity.ProjectForum;
-import com.bu200.project.entity.ProjectForumPost;
-import com.bu200.project.entity.ProjectMember;
-import com.bu200.project.repository.ProjectForumPostRepository;
-import com.bu200.project.repository.ProjectForumRepository;
-import com.bu200.project.repository.ProjectMemberRepository;
 import com.bu200.project.repository.ProjectRepository;
-import com.bu200.security.dto.CustomUserDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final ProjectMemberRepository projectMemberRepository;
-    private final ProjectForumRepository projectForumRepository;
-    private final ProjectForumPostRepository projectForumPostRepository;
+    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
-    private final Tool tool;
-    private Pageable pageable;
-
-    public ProjectService(ProjectRepository projectRepository, ProjectMemberRepository projectMemberRepository, ProjectForumRepository projectForumRepository, ProjectForumPostRepository projectForumPostRepository, ModelMapper modelMapper, Tool tool) {
+    public ProjectService(ProjectRepository projectRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
         this.projectRepository = projectRepository;
-        this.projectMemberRepository = projectMemberRepository;
-        this.projectForumRepository = projectForumRepository;
-        this.projectForumPostRepository = projectForumPostRepository;
+        this.accountRepository = accountRepository;
         this.modelMapper = modelMapper;
-        this.tool = tool;
     }
 
-    public Page<Project> findByAccountCode(Long userCode, int page) {
-        pageable = PageRequest.of(page,6);
-        Account account = new Account();
-        account.setAccountCode(userCode);
-        List<ProjectMember> member = projectMemberRepository.findByAccountCode(account);
-        List<Long> memberCode = new ArrayList<>();
-        for (ProjectMember projectMember : member) {
-            memberCode.add(projectMember.getProjectCode());
+
+    /**모든 프로젝트를 가져온다.
+     * 한 페이지당 6개의 프로젝트를 가져와야한다.
+     * 가져올때 고려 요소
+     * 1. openstatus : true
+     * 2. priority : 오름차순 => 오름차순으로 가져오기만 하면 된다.
+     */
+    @Transactional(readOnly = true)
+    public Page<ProjectDTO> getProject(Long accountCode, Pageable pageable){
+        Page<Project> findProjects = projectRepository.findAllByProjectOpenStatusIsTrueOrderByProjectPriorityAsc(pageable);
+
+        //page<엔티티>를 page<dto>로 바꿈
+        Page<ProjectDTO> projectDTOS = findProjects.map(project -> modelMapper.map(project, ProjectDTO.class));
+        return projectDTOS;
+    }
+
+    //내 팀의 프로젝트를 가져온다.
+    @Transactional(readOnly = true)
+    public Page<ProjectDTO> getMyProject(Long accountCode, Pageable pageable) {
+        Account findAccount = accountRepository.findByAccountCode(accountCode);
+        Long myTeamCode = findAccount.getTeam().getTeamCode();
+
+        Page<Project> findMyProjects = projectRepository.findAllByAccount_Team_TeamCodeAndProjectOpenStatusIsTrueOrderByProjectPriorityAsc(myTeamCode, pageable);
+        Page<ProjectDTO> projectDTOS = findMyProjects.map(myProject -> modelMapper.map(myProject, ProjectDTO.class));
+
+        return projectDTOS;
+    }
+    @Transactional(readOnly = true)
+    public Page<ProjectDTO> getKewordProject(String keyword, Pageable pageable) {
+        Page<Project> projects = projectRepository.findAllByProjectNameContainingAndProjectOpenStatusIsTrue(keyword, pageable);
+        Page<ProjectDTO> projectDTOS = projects.map(project -> modelMapper.map(project, ProjectDTO.class));
+        return projectDTOS;
+    }
+
+    @Transactional
+    public AddProjectDTO addProject(Long userCode, AddProjectDTO addProjectDTO) {
+        Project findProject = projectRepository.findByProjectNameAndProjectOpenStatusIsTrue(addProjectDTO.getProjectName());
+        if(findProject != null){
+            throw new ProjectExistException("이미 존재하는 프로젝트");
         }
-        Page<Project> projects = projectRepository.findAllByProjectCodeIn(memberCode,pageable);
-        for(Project pr : projects){
-            System.out.println(pr.getProjectName());
-        }
-        return projects;
-    }
 
-    public Page<Project> findAllByProjectOpenStatusTrue(int page) {
-        pageable = PageRequest.of(page,6);
-        return projectRepository.findAllByProjectOpenStatusTrue(pageable);
-    }
+        Account findAccount = accountRepository.findByAccountCode(userCode);
+        addProjectDTO.setTeam(findAccount.getTeam());
+        addProjectDTO.setAccount(findAccount);
 
-    public Project findById(Long projectCode) {
-        return projectRepository.findById(projectCode).orElseThrow();
-    }
+        Project saveProject = modelMapper.map(addProjectDTO, Project.class);
 
-    public List<ProjectForum> findByProjectCode(Long projectCode) {
-        try{
-            return projectForumRepository.findAllByProjectCodeOrderByProjectForumModifyDateDesc(projectCode);
-
-        } catch (Exception e){
-            return null;
-        }
-    }
-
-    public Project createProject(ProjectDTO projectDTO, CustomUserDetails user) {
-        Project project = modelMapper.map(projectDTO,Project.class);
-        Account account = new Account();
-        account.setAccountCode(Long.valueOf(user.getCode()));
-        project.setAccount(account);
-        return projectRepository.save(project);
-    }
-
-    public List<ProjectForumPost> findByProjectForumCode(Long projectForumCode) {
-        return projectForumPostRepository.findAllByProjectForumCodeOrderByProjectForumPostWriteDateDesc(projectForumCode);
+        return modelMapper.map(saveProject, AddProjectDTO.class);
     }
 }

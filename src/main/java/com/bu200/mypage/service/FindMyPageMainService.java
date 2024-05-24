@@ -37,7 +37,7 @@ public class FindMyPageMainService {
             if(account == null){
                 throw new EntityNotFoundException("accountId:" + accountId + "인 계정이 없습니다.");
             }
-            List<Project> projects = findMyPageProjectRepository.findByAccount_AccountIdOrderByProjectPriorityDesc(accountId);
+            List<Project> projects = findMyPageProjectRepository.findByAccount_AccountIdAndProjectOpenStatusIsTrueOrderByProjectPriorityDesc(accountId);
             if(projects.isEmpty()){
             throw new EntityNotFoundException("accountId:" + accountId + "인 프로젝트가 없습니다.");
             }

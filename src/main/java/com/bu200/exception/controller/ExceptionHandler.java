@@ -2,10 +2,7 @@ package com.bu200.exception.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.common.response.Tool;
-import com.bu200.exception.AlreadyGoException;
-import com.bu200.exception.AlreadyLeaveException;
-import com.bu200.exception.HaveToGoException;
-import com.bu200.exception.TodoListExistException;
+import com.bu200.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +34,11 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ResponseDTO> TodoListExistException(TodoListExistException ex){
         return tool.res(HttpStatus.CONFLICT, "중복된 투두리스트 존재!", ex.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ResponseDTO> ProjectExistException(ProjectExistException ex){
+        return tool.res(HttpStatus.CONFLICT, "이미 존재하는 프로젝트", ex.getMessage());
     }
 
 

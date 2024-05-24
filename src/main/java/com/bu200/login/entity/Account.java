@@ -57,4 +57,6 @@ public class Account {
     @JoinColumn(name = "team_code")
     private Team team;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    private List<Project> projects;
 }
