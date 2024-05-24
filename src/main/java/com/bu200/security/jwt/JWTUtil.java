@@ -23,7 +23,7 @@ public class JWTUtil {
         //verifyWith 는 시크릿 키를 갖고 우리 서버에서 생성된 토큰이 맞는지 검사한다.
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
-    public Integer getUserCode(String token) {
+    public Integer getCode(String token) {
         return getInfo(token).get("accountCode",Integer.class);
     }
     public String getEmail(String token) {
@@ -50,12 +50,12 @@ public class JWTUtil {
     }
 
     //JWT 를 발급하는 메서드이다. 추가하고 싶은 정보를 추가하자.
-    public String createJwt(Integer accountcode, String username, String role, String email, String name, Long expiredMs){
+    public String createJwt(Integer accountCode, String username, String role, String email, String name, Long expiredMs){
         System.out.println("만들어진 토큰의 시간 : "+new Date(System.currentTimeMillis()));
         System.out.println("토큰이 만료될 시간 : "+new Date(System.currentTimeMillis() + expiredMs));
         System.out.println("email? : " + email);
         return Jwts.builder()
-                .claim("accountCode", accountcode)
+                .claim("accountCode",accountCode)
                 .claim("accountId",username)
                 .claim("accountRole",role)
                 .claim("accountEmail",email)

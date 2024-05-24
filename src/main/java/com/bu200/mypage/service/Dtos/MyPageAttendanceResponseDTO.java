@@ -5,11 +5,13 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter@Setter@ToString
-@NoArgsConstructor@AllArgsConstructor
-public class MyPageAttendanceRequestDTO {
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class MyPageAttendanceResponseDTO {
     private String attendanceStatus;
-    private LocalDate attendanceDate;
     private LocalDateTime attendanceGoWork;
     private LocalDateTime attendanceLeaveWork;
 }

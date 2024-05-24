@@ -11,4 +11,7 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     Boolean existsByAccountId(String accountId);
     @Query("SELECT d.departmentName FROM Account a JOIN a.team t JOIN t.department d WHERE a.accountId = :userName")
     String findDepartmentNameByUserName(@Param("userName") String userName);
+
+    Account findByAccountId(String accountId);
+    Account findByAccountCode(Long accountCode);
 }

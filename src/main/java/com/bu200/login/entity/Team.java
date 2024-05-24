@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 public class Team {
     @Id @Column(name = "team_code")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamCode;
 
     @Column(name = "team_name")

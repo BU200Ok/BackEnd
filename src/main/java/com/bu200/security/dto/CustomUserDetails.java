@@ -13,7 +13,6 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.user = user;
-        System.out.println(user);
     }
 
     @Override
@@ -28,18 +27,23 @@ public class CustomUserDetails implements UserDetails {
         return collection;
     }
 
+    //비번
     @Override
     public String getPassword() {
         return user.getAccountPassword();
     }
-
+    //이메일
     public String getEmail(){
         return user.getAccountEmail();
     }
+    //이름
     public String getName(){
         return user.getAccountName();
     }
-
+    public Integer getCode(){
+        return user.getAccountCode();
+    }
+    //아이디
     @Override
     public String getUsername() {
         return user.getAccountId();

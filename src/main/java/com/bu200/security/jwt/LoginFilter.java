@@ -62,18 +62,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("로그인 성공");
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
-        Integer accountCode = customUserDetails.getAccountCode();
         String accountId = customUserDetails.getUsername();
         String accountEmail = customUserDetails.getEmail();
         String accountName = customUserDetails.getName();
+        Integer accountCode = customUserDetails.getCode();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String accountRole = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(accountCode, accountId, accountRole, accountEmail, accountName, 60*60*60*10L);
+        String token = jwtUtil.createJwt(accountCode ,accountId, accountRole, accountEmail, accountName, 21600000L);
 
+        System.out.println("발급받은 토큰 : " + token);
         System.out.println("유저이름은 : "+accountId+"\n"+"유저 권한은 : "+accountRole);
 
         response.addHeader("Authorization", "Bearer " + token);
