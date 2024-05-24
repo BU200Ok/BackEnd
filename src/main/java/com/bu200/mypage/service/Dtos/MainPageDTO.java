@@ -20,9 +20,16 @@ public class MainPageDTO {
     private Date accountJoinDate;
     private String accountPosition;
     private String accountRole;
-    private Team team;
     private String accountId;
     private Date accountResignDate;
+
+    //team
+    private Long teamCode;
+    private String teamName;
+
+    //department
+    private Long departmentCode;
+    private String departmentName;
 
     //project
     private Long projectCode;

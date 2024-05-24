@@ -2,6 +2,8 @@ package com.bu200.mypage.service;
 
 import com.bu200.login.entity.Account;
 import com.bu200.login.entity.Attendance;
+import com.bu200.login.entity.Department;
+import com.bu200.login.entity.Team;
 import com.bu200.mypage.repository.FindAccountDataRepository;
 import com.bu200.mypage.repository.FindMyPageProjectRepository;
 import com.bu200.mypage.repository.MyPageAttendanceRepository;
@@ -34,6 +36,8 @@ public class FindMyPageMainService {
     public MainPageDTO FindAccountData(String accountId){
 
             Account account = findAccountDataRepository.findByAccountId(accountId);
+            Team team = account.getTeam();
+            Department department = team.getDepartment();
             if(account == null){
                 throw new EntityNotFoundException("accountId:" + accountId + "인 계정이 없습니다.");
             }
@@ -45,6 +49,8 @@ public class FindMyPageMainService {
             Attendance attendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);
             MainPageDTO mainPageDTO = new MainPageDTO();
             modelMapper.map(account, mainPageDTO);
+            modelMapper.map(team, mainPageDTO);
+            modelMapper.map(department, mainPageDTO);
             modelMapper.map(project, mainPageDTO);
 
             return mainPageDTO;

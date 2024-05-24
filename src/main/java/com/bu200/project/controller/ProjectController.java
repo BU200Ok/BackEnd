@@ -31,7 +31,7 @@ public class ProjectController {
     }
 
     //전체 프로젝트 가져오기
-    @GetMapping("/find-all-Project")
+    @GetMapping("/find-all-project")
     public ResponseEntity<ResponseDTO> getAllProject(@AuthenticationPrincipal CustomUserDetails user,
                                                      @PageableDefault(size = 6)Pageable pageable){
         /**user가 포함된 팀의 모든 프로젝트를 가져온다.
