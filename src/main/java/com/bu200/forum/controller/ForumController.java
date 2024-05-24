@@ -76,10 +76,22 @@ public class ForumController {
 
     // 사용자가 작성한 게시글 목록 확인
     @GetMapping("/my-posts")
-    public ResponseEntity<ResponseDTO> getMyPosts(@AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<ResponseDTO> getMyPostList(@AuthenticationPrincipal CustomUserDetails user) {
         try {
             List<ForumDTO> myPosts = forumService.findForumsByAccountCode(user.getUsername());
             return tool.res(HttpStatus.OK, "내가 작성한 게시글 목록입니다.", myPosts);
+        } catch (Exception e) {
+            return tool.res(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    // 상세 내용 보기
+    @GetMapping("/{forumCode}")
+    public ResponseEntity<ResponseDTO> getForumDetail(@AuthenticationPrincipal CustomUserDetails user, @PathVariable Long forumCode) {
+        System.out.println(user.getAccountCode());
+        try {
+            ForumDTO forum = forumService.getForumByForumCode(forumCode);
+            return tool.res(HttpStatus.OK, "게시글 상세 내용입니다.", forum);
         } catch (Exception e) {
             return tool.res(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
         }
@@ -89,15 +101,14 @@ public class ForumController {
     //게시글 삭제
     @DeleteMapping("/delete/{forumCode}")
     public ResponseEntity<ResponseDTO> deleteForum(@AuthenticationPrincipal CustomUserDetails user, @PathVariable Long forumCode) {
-        Long accountCode = Long.valueOf(user.getAccountCode());
-        System.out.println(accountCode);
         try {
-            forumService.deleteForum(forumCode, accountCode);
+            forumService.deleteForum(forumCode, user.getUsername());
             return tool.res(HttpStatus.OK, "게시글이 삭제되었습니다.", null);
         } catch (IllegalArgumentException e) {
             return tool.res(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         }
     }
+
 }
 
 

@@ -45,12 +45,14 @@ public class JWTFilter extends OncePerRequestFilter {
         //여기까지 오면 토큰이 정상이다.
         //토큰에서 아이디와, 권한 획득
         System.out.println("토큰이 정상입니다.");
+        Integer accountCode = jwtUtil.getUserCode(token);
         String accountId = jwtUtil.getUsername(token);
         String accountRole = jwtUtil.getRole(token);
         String accountEmail = jwtUtil.getEmail(token);
         String accountName = jwtUtil.getName(token);
 
         User user = new User();
+        user.setAccountCode(accountCode);
         user.setAccountId(accountId);
         user.setAccountRole(accountRole);
         user.setAccountEmail(accountEmail);

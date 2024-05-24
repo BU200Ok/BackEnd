@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,35 +74,65 @@ public class ForumService {
         return forumRepository.save(forum);
     }
 
+    // 특정 게시글 조회
+    public ForumDTO getForumByForumCode(Long forumCode) {
+        Optional<Forum> forum = forumRepository.findByForumCode(forumCode);
+        if (forum.isPresent()) {
+            return convertToDto(forum.get());
+        } else {
+            throw new IllegalArgumentException("Forum not found with forumCode: " + forumCode);
+        }
+    }
+
 
     //삭제
-    public void deleteForum(Long forumCode, Long accountCode) {
-        if (!forumRepository.existsByIdAndAccount_AccountCode(forumCode, accountCode)) {
-            throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
+    public void deleteForum(Long forumCode, String accountId) {
+        if (!forumRepository.existsByForumCodeAndAccount_AccountId(forumCode, accountId)) {
+            throw new IllegalArgumentException("게시글을 찾을 수 없거나 사용자가 작성한 게시글이 아닙니다.");
         }
-        forumRepository.deleteByIdAndAccount_AccountCode(forumCode, accountCode);
+        forumRepository.deleteByForumCodeAndAccount_AccountId(forumCode, accountId);
     }
-
 
     //DTO 변환
+//    private ForumDTO convertToDto(Forum forum) {
+//        ForumDTO dto = new ForumDTO();
+//        dto.setForumCode(forum.getForumCode());
+//        dto.setForumTitle(forum.getForumTitle());
+//        dto.setForumContent(forum.getForumContent());
+//        dto.setForumType(forum.getForumType());
+//        dto.setForumCreateTime(forum.getForumCreateTime());
+//
+//        return dto;
+//    }
+//
+//    //Entity 변환
+//    private Forum convertToEntity(ForumDTO forumDTO) {
+//        Forum forum = new Forum();
+//        forum.setForumTitle(forumDTO.getForumTitle());
+//        forum.setForumContent(forumDTO.getForumContent());
+//        forum.setForumType(forumDTO.getForumType());
+//        forum.setForumCreateTime(forumDTO.getForumCreateTime());
+//        // 필요한 다른 필드 설정
+//        return forum;
+//    }
+
     private ForumDTO convertToDto(Forum forum) {
-        ForumDTO dto = new ForumDTO();
-        dto.setForumCode(forum.getForumCode());
-        dto.setForumTitle(forum.getForumTitle());
-        dto.setForumContent(forum.getForumContent());
-        dto.setForumType(forum.getForumType());
-        dto.setForumCreateTime(forum.getForumCreateTime());
-        return dto;
+        return new ForumDTO(forum);
     }
 
-    //Entity 변환
     private Forum convertToEntity(ForumDTO forumDTO) {
         Forum forum = new Forum();
+        forum.setForumCode(forumDTO.getForumCode());
         forum.setForumTitle(forumDTO.getForumTitle());
         forum.setForumContent(forumDTO.getForumContent());
         forum.setForumType(forumDTO.getForumType());
         forum.setForumCreateTime(forumDTO.getForumCreateTime());
-        // 필요한 다른 필드 설정
+
+        if (forumDTO.getAccountCode() != null) {
+            Optional<Account> account = accountRepository.findById(forumDTO.getAccountCode());
+            account.ifPresent(forum::setAccount);
+        }
+
         return forum;
     }
 

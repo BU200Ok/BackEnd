@@ -44,7 +44,6 @@ public class Forum {
         @JoinColumn(name = "account_code")
         private Account account;
 
-
 }
 
 

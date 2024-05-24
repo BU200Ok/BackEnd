@@ -20,17 +20,15 @@ public interface ForumRepository extends JpaRepository<Forum,Long> {
     // 내가 쓴 글 확인
     List<Forum> findByAccount_AccountId(String userName);
 
+    //게시글 조회
+    Optional<Forum> findByForumCode(Long forumCode);
+
     //부서 게시판 목록
     @Query("SELECT f FROM Forum f JOIN FETCH f.account a JOIN FETCH a.team t JOIN FETCH t.department d WHERE d.departmentName = :departmentName")
     List<Forum> findAllByDepartmentList(@Param("departmentName") String departmentName);
 
-    //forumCode, accountCode 해당하는 게시글 존재여부
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Forum f WHERE f.forumCode = :forumCode AND f.account.accountCode = :accountCode")
-    boolean existsByIdAndAccount_AccountCode(@Param("forumCode") Long forumCode, @Param("accountCode") Long accountCode);
-
-    //삭제
-    @Query("DELETE FROM Forum f WHERE f.forumCode = :forumCode AND f.account.accountCode = :accountCode")
-    void deleteByIdAndAccount_AccountCode(@Param("forumCode") Long forumCode, @Param("accountCode") Long accountCode);
+    boolean existsByForumCodeAndAccount_AccountId(Long forumCode, String accountId);
+    void deleteByForumCodeAndAccount_AccountId(Long forumCode, String accountId);
 
 
 }
