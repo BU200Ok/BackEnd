@@ -55,6 +55,7 @@ public class ProjectController {
                                                     @PageableDefault(size = 6)Pageable pageable){
         Long userCode = Long.valueOf(user.getCode());
         Page<ProjectDTO> projectDTOS = projectService.getMyProject(userCode, pageable);
+
         return tool.res(HttpStatus.OK, "내 팀의 모든 프로젝트 목록입니다.", projectDTOS);
     }
 

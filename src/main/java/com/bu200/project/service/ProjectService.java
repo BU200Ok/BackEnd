@@ -2,6 +2,7 @@ package com.bu200.project.service;
 
 import com.bu200.exception.ProjectExistException;
 import com.bu200.login.entity.Account;
+import com.bu200.login.entity.Team;
 import com.bu200.login.repository.AccountRepository;
 import com.bu200.project.dto.AddProjectDTO;
 import com.bu200.project.dto.ProjectDTO;
@@ -36,7 +37,13 @@ public class ProjectService {
         Page<Project> findProjects = projectRepository.findAllByProjectOpenStatusIsTrueOrderByProjectPriorityAsc(pageable);
 
         //page<엔티티>를 page<dto>로 바꿈
-        Page<ProjectDTO> projectDTOS = findProjects.map(project -> modelMapper.map(project, ProjectDTO.class));
+        Page<ProjectDTO> projectDTOS = findProjects.map(myProject -> {
+            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
+            projectDTO.setTeamName(myProject.getTeam().getTeamName());
+            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
+            return projectDTO;
+        });
+
         return projectDTOS;
     }
 
@@ -47,14 +54,25 @@ public class ProjectService {
         Long myTeamCode = findAccount.getTeam().getTeamCode();
 
         Page<Project> findMyProjects = projectRepository.findAllByAccount_Team_TeamCodeAndProjectOpenStatusIsTrueOrderByProjectPriorityAsc(myTeamCode, pageable);
-        Page<ProjectDTO> projectDTOS = findMyProjects.map(myProject -> modelMapper.map(myProject, ProjectDTO.class));
+        Page<ProjectDTO> projectDTOS = findMyProjects.map(myProject -> {
+            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
+            projectDTO.setTeamName(myProject.getTeam().getTeamName());
+            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
+            return projectDTO;
+        });
+
 
         return projectDTOS;
     }
     @Transactional(readOnly = true)
     public Page<ProjectDTO> getKewordProject(String keyword, Pageable pageable) {
         Page<Project> projects = projectRepository.findAllByProjectNameContainingAndProjectOpenStatusIsTrue(keyword, pageable);
-        Page<ProjectDTO> projectDTOS = projects.map(project -> modelMapper.map(project, ProjectDTO.class));
+        Page<ProjectDTO> projectDTOS = projects.map(myProject -> {
+            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
+            projectDTO.setTeamName(myProject.getTeam().getTeamName());
+            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
+            return projectDTO;
+        });
         return projectDTOS;
     }
 

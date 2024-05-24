@@ -1,21 +1,19 @@
 package com.bu200.project.dto;
 
 import com.bu200.login.entity.Team;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+@Getter@Setter@AllArgsConstructor@NoArgsConstructor@ToString
 public class ProjectDTO {
     private Long projectCode;
     private String projectName;
     private LocalDate projectStart;
     private LocalDate projectEnd;
     private String projectDescription;
-    private String prjectStatus;
+    private String projectStatus;
 
-    private Team team;
+    private String teamName;
+    private String departmentName;
 }
