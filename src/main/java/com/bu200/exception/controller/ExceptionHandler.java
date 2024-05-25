@@ -41,6 +41,11 @@ public class ExceptionHandler {
         return tool.res(HttpStatus.CONFLICT, "이미 존재하는 프로젝트", ex.getMessage());
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ResponseDTO> TaskExistException(TaskExistException ex){
+        return tool.res(HttpStatus.CONFLICT, "이미 존재하는 업무", ex.getMessage());
+    }
+
 
 
 }
