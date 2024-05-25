@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity @Table(name = "project")
@@ -28,7 +29,7 @@ public class Project {
     private Timestamp projectStart;
 
     @Column(name = "project_end")
-    private LocalDateTime localDateTime;
+    private LocalDate projectEnd;
 
     @Column(name = "project_priority")
     private Integer projectPriority;
