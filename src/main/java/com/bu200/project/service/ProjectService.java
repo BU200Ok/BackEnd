@@ -2,8 +2,8 @@ package com.bu200.project.service;
 
 import com.bu200.exception.ProjectExistException;
 import com.bu200.login.entity.Account;
-import com.bu200.login.entity.Team;
 import com.bu200.login.repository.AccountRepository;
+import com.bu200.project.dto.AccountDTO;
 import com.bu200.project.dto.AddProjectDTO;
 import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.entity.Project;
@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -43,7 +46,6 @@ public class ProjectService {
             projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
             return projectDTO;
         });
-
         return projectDTOS;
     }
 
@@ -84,11 +86,30 @@ public class ProjectService {
         }
 
         Account findAccount = accountRepository.findByAccountCode(userCode);
-        addProjectDTO.setTeam(findAccount.getTeam());
-        addProjectDTO.setAccount(findAccount);
 
         Project saveProject = modelMapper.map(addProjectDTO, Project.class);
+        saveProject.setTeam(findAccount.getTeam());
+        saveProject.setAccount(findAccount);
+        saveProject = projectRepository.save(saveProject);
+        addProjectDTO = modelMapper.map(saveProject, AddProjectDTO.class);
+        addProjectDTO.setTeamName(findAccount.getTeam().getTeamName());
+        addProjectDTO.setAccountName(findAccount.getAccountName());
+        return addProjectDTO;
+    }
 
-        return modelMapper.map(saveProject, AddProjectDTO.class);
+    public List<AccountDTO> getProjectAccount(Long projectCode) {
+        Account findAccount = projectRepository.findByProjectCode(projectCode).getAccount();
+        Long TeamCode = findAccount.getTeam().getTeamCode();
+        List<Account> accounts = accountRepository.findAllByTeam_TeamCode(TeamCode);
+
+
+        return accounts.stream()
+                .map(account -> {
+                    AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
+                    accountDTO.setDepartmentName(account.getTeam().getDepartment().getDepartmentName());
+                    accountDTO.setTeamName(account.getTeam().getTeamName());
+                    return accountDTO;
+                }).collect(Collectors.toList());
+
     }
 }

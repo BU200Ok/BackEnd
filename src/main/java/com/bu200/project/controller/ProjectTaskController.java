@@ -42,14 +42,14 @@ public class ProjectTaskController {
         return tool.res(HttpStatus.OK, "모든 업무입니다.", taskDTOS);
     }
 
-//    @GetMapping("/{projectCode}/{taskType}/find-keyword")
-//    public ResponseEntity<ResponseDTO> getKeywordProjectTask(@PathVariable String taskType,
-//                                                             @PathVariable Long projectCode,
-//                                                             @RequestParam String keyWord,
-//                                                             @PageableDefault(size = 10)Pageable pageable){
-//        Page<TaskDTO> taskDTOS = projectTaskService.getKeyWordTask(projectCode, taskType, keyWord, pageable);
-//        return tool.res(HttpStatus.OK,"추가예정", taskDTOS);
-//    }
+    @GetMapping("/{projectCode}/{taskType}/find-keyword")
+    public ResponseEntity<ResponseDTO> getKeywordProjectTask(@PathVariable String taskType,
+                                                             @PathVariable Long projectCode,
+                                                             @RequestParam(defaultValue = "all") String keyword,
+                                                             @PageableDefault(size = 10)Pageable pageable){
+        Page<TaskDTO> taskDTOS = projectTaskService.getKeyWordTask(projectCode, taskType, keyword, pageable);
+        return tool.res(HttpStatus.OK,"추가예정", taskDTOS);
+    }
 
     @PostMapping("/{projectCode}/{taskType}/add-task")
     public ResponseEntity<ResponseDTO> addTask(@PathVariable Long projectCode,
