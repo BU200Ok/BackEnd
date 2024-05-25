@@ -60,8 +60,8 @@ public class ProjectController {
     }
 
     //프로젝트 검색
-    @GetMapping("/{keyword}")
-    public ResponseEntity<ResponseDTO> FindProject(@PathVariable String keyword,
+    @GetMapping("/find-keyword")
+    public ResponseEntity<ResponseDTO> FindProject(@RequestParam String keyword,
                                                    @PageableDefault(size = 6)Pageable pageable){
         Page<ProjectDTO> projectDTOS = projectService.getKewordProject(keyword, pageable);
         return tool.res(HttpStatus.OK, "키워드가 포함된 프로젝트 목록입니다.", projectDTOS);

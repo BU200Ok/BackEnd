@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyGroup;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class TaskPost {
     @Column(name = "task_post_time")
     private Timestamp taskPostTime;
 
+    @UpdateTimestamp
     @Column(name = "task_post_modify_time")
     private LocalDate taskPostModifyTime;
 

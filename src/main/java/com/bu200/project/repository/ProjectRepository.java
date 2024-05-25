@@ -20,4 +20,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     //프로젝트 이름 중복검사
     Project findByProjectNameAndProjectOpenStatusIsTrue(String projectName);
+
+    Project findByProjectCode(Long projectCode);
 }
