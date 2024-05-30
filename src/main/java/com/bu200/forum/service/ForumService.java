@@ -84,7 +84,6 @@ public class ForumService {
         }
     }
 
-
     //삭제
     public void deleteForum(Long forumCode, String accountId) {
         if (!forumRepository.existsByForumCodeAndAccount_AccountId(forumCode, accountId)) {
@@ -93,28 +92,22 @@ public class ForumService {
         forumRepository.deleteByForumCodeAndAccount_AccountId(forumCode, accountId);
     }
 
-    //DTO 변환
-//    private ForumDTO convertToDto(Forum forum) {
-//        ForumDTO dto = new ForumDTO();
-//        dto.setForumCode(forum.getForumCode());
-//        dto.setForumTitle(forum.getForumTitle());
-//        dto.setForumContent(forum.getForumContent());
-//        dto.setForumType(forum.getForumType());
-//        dto.setForumCreateTime(forum.getForumCreateTime());
-//
-//        return dto;
-//    }
-//
-//    //Entity 변환
-//    private Forum convertToEntity(ForumDTO forumDTO) {
-//        Forum forum = new Forum();
-//        forum.setForumTitle(forumDTO.getForumTitle());
-//        forum.setForumContent(forumDTO.getForumContent());
-//        forum.setForumType(forumDTO.getForumType());
-//        forum.setForumCreateTime(forumDTO.getForumCreateTime());
-//        // 필요한 다른 필드 설정
-//        return forum;
-//    }
+    //수정
+    @Transactional
+    public void updateForum(Long forumCode, String accountId, ForumDTO forumDTO){
+        if (!forumRepository.existsByForumCodeAndAccount_AccountId(forumCode, accountId)) {
+            throw new IllegalArgumentException("게시글을 찾을 수 없거나 사용자가 작성한 게시글이 아닙니다.");
+        }
+        Forum existingForum = forumRepository.findById(forumCode)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // 기존 포럼 엔티티를 수정합니다.
+        existingForum.setForumTitle(forumDTO.getForumTitle());
+        existingForum.setForumContent(forumDTO.getForumContent());
+        existingForum.setForumModify(LocalDateTime.now());
+        forumRepository.save(existingForum);
+    }
+
 
     private ForumDTO convertToDto(Forum forum) {
         return new ForumDTO(forum);

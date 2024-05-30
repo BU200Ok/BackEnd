@@ -109,6 +109,18 @@ public class ForumController {
         }
     }
 
+    //게시글 수정
+    @PutMapping("/edit/{forumCode}")
+    public ResponseEntity<ResponseDTO> editForum(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ForumDTO forumDTO, @PathVariable Long forumCode) {
+        System.out.println("sss");
+        try {
+            forumService.updateForum(forumCode, user.getUsername(), forumDTO);
+            return tool.res(HttpStatus.OK, "게시글이 수정되었습니다.", null);
+        } catch (IllegalArgumentException e) {
+            System.out.println("aaa");
+            return tool.res(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
+    }
 }
 
 
