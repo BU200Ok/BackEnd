@@ -1,5 +1,7 @@
 package com.bu200.project.repository;
 
+import com.bu200.project.dto.AccountDTO;
+import com.bu200.project.dto.ProjectDetailDTO;
 import com.bu200.project.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project,Long> {
@@ -49,4 +52,25 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
                                          @Param("accountCode") Long accountCode,
                                          Pageable pageable);
 
+
+    Project findByProjectNameAndProjectOpenStatusIsTrue(String projectName);
+
+    @Query("select new com.bu200.project.dto.ProjectDetailDTO" +
+            "(p.projectCode, p.projectName, p.projectStart, p.projectEnd, p.projectStatus, p.projectDescription," +
+            "a.accountName, a.accountEmail, d.departmentName, t.teamName) From Project p "+
+            "join p.account a " +
+            "join a.team t "+
+            "join t.department d " +
+            "where p.projectCode = :projectCode")
+    ProjectDetailDTO findProjectDetail(@Param("projectCode") Long projectCode);
+
+    @Query("select new com.bu200.project.dto.AccountDTO" +
+            "(a.accountName, a.accountPosition, t.teamName, d.departmentName) from Project p " +
+            "join p.accountProjects ap " +
+            "join ap.account a " +
+            "left join a.team t " +
+            "left join t.department d " +
+            "where p.projectCode = :projectCode"
+            )
+    List<AccountDTO> findProjectDeTailAccount(@Param("projectCode") Long projectCode);
 }

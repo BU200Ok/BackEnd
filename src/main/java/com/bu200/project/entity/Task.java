@@ -1,5 +1,6 @@
 package com.bu200.project.entity;
 
+import com.bu200.login.entity.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.springframework.cglib.core.Local;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity @Table(name = "task")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
@@ -41,4 +43,7 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_code")
     private Project project;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+    private List<AccountTask> accountTasks;
 }

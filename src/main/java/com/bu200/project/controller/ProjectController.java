@@ -2,6 +2,8 @@ package com.bu200.project.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.common.response.Tool;
+import com.bu200.project.dto.AddProjectRequestDTO;
+import com.bu200.project.dto.AddProjectResponseDTO;
 import com.bu200.project.dto.AllProjectResponseDTO;
 import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.service.ProjectsService;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -72,10 +75,17 @@ public class ProjectController {
 
         return tool.res(HttpStatus.OK, "키워드가 포함된 내 프로젝트", projects);
     }
-//
-//    @PostMapping("/add")
-//    public ResponseEntity<ResponseDTO> addProject(@AuthenticationPrincipal CustomUserDetails user,
-//                                                  @RequestBody AddProjectRequestDTO addProjectRequestDTO){
-//
-//    }
+
+    @PostMapping("/add")
+    public ResponseEntity<ResponseDTO> addProject(@AuthenticationPrincipal CustomUserDetails user,
+                                                  @RequestBody AddProjectRequestDTO addProjectRequestDTO){
+        addProjectRequestDTO.setProjectStart(LocalDate.now());
+        if(projectsService.checkDuplicateName(addProjectRequestDTO.getProjectName())){
+            return tool.resErr("중복된 이름의 프로젝트 존재");
+        }
+        AddProjectResponseDTO addProjectResponseDTO = projectsService.addProject(Long.valueOf(user.getCode()), addProjectRequestDTO);
+
+        return tool.res(HttpStatus.OK, "추가 성공", addProjectResponseDTO);
+
+    }
 }

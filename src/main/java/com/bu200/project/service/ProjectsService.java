@@ -1,6 +1,8 @@
 package com.bu200.project.service;
 
 import com.bu200.project.dto.AccountDTO;
+import com.bu200.project.dto.AddProjectRequestDTO;
+import com.bu200.project.dto.AddProjectResponseDTO;
 import com.bu200.project.dto.ProjectDTO;
 import com.bu200.project.entity.AccountProject;
 import com.bu200.project.entity.Project;
@@ -153,5 +155,23 @@ public class ProjectsService {
         }).collect(Collectors.toList());
 
         return new PageImpl<>(projectDTOs, pageable, projectCodesPage.getTotalElements());
+    }
+
+    @Transactional
+    public AddProjectResponseDTO addProject(Long accountCode, AddProjectRequestDTO addProjectRequestDTO) {
+        Project saveProjectProject = modelMapper.map(addProjectRequestDTO, Project.class);
+        saveProjectProject = projectRepository.save(saveProjectProject);
+
+        return modelMapper.map(saveProjectProject, AddProjectResponseDTO.class);
+    }
+
+
+    //프로젝트 추가 중복 검사 로직
+    public boolean checkDuplicateName(String projectName) {
+        Project findProject = projectRepository.findByProjectNameAndProjectOpenStatusIsTrue(projectName);
+        if(findProject != null){
+            return true;
+        }
+        return false;
     }
 }
