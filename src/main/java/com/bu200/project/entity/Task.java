@@ -28,7 +28,10 @@ public class Task {
     private String taskDetail;
 
     @Column(name = "task_type")
-    private String taskType;
+    private Integer taskType;
+
+    @Column(name = "task_type_detail")
+    private String taskTypeDetail;
 
     @CreationTimestamp
     @Column(name = "task_start")

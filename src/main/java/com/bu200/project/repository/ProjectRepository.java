@@ -73,4 +73,6 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
             "where p.projectCode = :projectCode"
             )
     List<AccountDTO> findProjectDeTailAccount(@Param("projectCode") Long projectCode);
+
+    Project findByProjectCode(Long projectCode);
 }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountProjectRepository extends JpaRepository<AccountProject, Long> {
+    AccountProject findByAccount_AccountIdAndProject_ProjectCode(String AccountId, Long projectCode);
 }

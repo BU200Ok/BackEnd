@@ -1,5 +1,7 @@
 package com.bu200.project.service;
 
+import com.bu200.login.entity.Account;
+import com.bu200.login.repository.AccountRepository;
 import com.bu200.project.dto.AccountDTO;
 import com.bu200.project.dto.AddProjectRequestDTO;
 import com.bu200.project.dto.AddProjectResponseDTO;
@@ -23,11 +25,13 @@ public class ProjectsService {
     private final ModelMapper modelMapper;
     private final AccountProjectRepository accountProjectRepository;
     private final ProjectRepository projectRepository;
+    private final AccountRepository accountRepository;
 
-    public ProjectsService(ModelMapper modelMapper, AccountProjectRepository accountProjectRepository, ProjectRepository projectRepository) {
+    public ProjectsService(ModelMapper modelMapper, AccountProjectRepository accountProjectRepository, ProjectRepository projectRepository, AccountRepository accountRepository) {
         this.modelMapper = modelMapper;
         this.accountProjectRepository = accountProjectRepository;
         this.projectRepository = projectRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Transactional(readOnly = true)
@@ -159,10 +163,15 @@ public class ProjectsService {
 
     @Transactional
     public AddProjectResponseDTO addProject(Long accountCode, AddProjectRequestDTO addProjectRequestDTO) {
-        Project saveProjectProject = modelMapper.map(addProjectRequestDTO, Project.class);
-        saveProjectProject = projectRepository.save(saveProjectProject);
+        Project saveProject = modelMapper.map(addProjectRequestDTO, Project.class);
+        Account findAccount = accountRepository.findByAccountCode(accountCode);
+        saveProject.setAccount(findAccount);
 
-        return modelMapper.map(saveProjectProject, AddProjectResponseDTO.class);
+        saveProject = projectRepository.save(saveProject);
+
+        accountProjectRepository.save(new AccountProject(null, findAccount, saveProject));
+
+        return modelMapper.map(saveProject, AddProjectResponseDTO.class);
     }
 
 
