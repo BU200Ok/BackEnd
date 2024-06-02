@@ -14,29 +14,29 @@ import java.sql.Timestamp;
 public class TaskFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "output_code")
-    private Long outputCode;
+    @Column(name = "task_file_code")
+    private Long taskFileCode;
 
-    @Column(name = "output_name")
-    private String outputName;
+    @Column(name = "task_file_name")
+    private String taskFileName;
 
-    @Column(name = "output_rename")
-    private String outputRename;
+    @Column(name = "task_file_rename")
+    private String taskFileRename;
 
-    @Column(name = "output_size")
-    private Long outputsize;
+    @Column(name = "task_file_size")
+    private Long taskFileSize;
 
     @CreationTimestamp
-    @Column(name = "output_create_time")
-    private Timestamp outputCreateTime;
+    @Column(name = "task_file_create_time")
+    private Timestamp taskFileCreateTime;
 
-    @Column(name = "output_type")
-    private String outputType;
+    @Column(name = "task_file_type")
+    private String taskFileType;
 
-    @Column(name = "output_url")
-    private String outputUrl;
+    @Column(name = "task_file_path")
+    private String taskFilePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_code")
-    private Project project;
+    @JoinColumn(name = "task_post_code")
+    private TaskPost taskPost;
 }

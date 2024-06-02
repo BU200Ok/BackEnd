@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity @Table(name = "task_post")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
@@ -38,4 +39,7 @@ public class TaskPost {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_code")
     private Account account;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "taskPost")
+    private List<TaskFile> taskFiles;
 }
