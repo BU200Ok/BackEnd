@@ -3,27 +3,33 @@ import com.bu200.common.response.ResponseDTO;
 import com.bu200.forum.dto.ForumDTO;
 import com.bu200.common.response.Tool;
 import com.bu200.forum.entity.Forum;
+import com.bu200.forum.service.ForumFileService;
 import com.bu200.forum.service.ForumService;
 import com.bu200.mypage.service.Dtos.MainPageDTO;
 import com.bu200.mypage.service.FindMyPageMainService;
 import com.bu200.security.dto.CustomUserDetails;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import org.springframework.data.domain.Page;
 
 @RequestMapping("/forum")
 @Controller
 public class ForumController {
     private final ForumService forumService;
+
+    private final ForumFileService forumFileService;
     private final FindMyPageMainService findMyPageMainService;
     private final Tool tool;
 
-    public ForumController(ForumService forumService, FindMyPageMainService findMyPageMainService, Tool tool) {
+    public ForumController(ForumService forumService, ForumFileService forumFileService, FindMyPageMainService findMyPageMainService, Tool tool) {
         this.forumService = forumService;
+        this.forumFileService = forumFileService;
         this.findMyPageMainService = findMyPageMainService;
         this.tool = tool;
     }
@@ -37,7 +43,7 @@ public class ForumController {
 
     // 부서별 게시판
     @GetMapping("/department")
-    public ResponseEntity<ResponseDTO> getDepartmentForums(@AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<ResponseDTO> getDepartmentForums(@AuthenticationPrincipal CustomUserDetails user, @PageableDefault(page = 1) Pageable pageable) {
         boolean isAdmin = user.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         if (isAdmin) {
@@ -73,7 +79,6 @@ public class ForumController {
         }
     }
 
-
     // 사용자가 작성한 게시글 목록 확인
     @GetMapping("/my-posts")
     public ResponseEntity<ResponseDTO> getMyPostList(@AuthenticationPrincipal CustomUserDetails user) {
@@ -88,7 +93,7 @@ public class ForumController {
     // 상세 내용 보기
     @GetMapping("/{forumCode}")
     public ResponseEntity<ResponseDTO> getForumDetail(@AuthenticationPrincipal CustomUserDetails user, @PathVariable Long forumCode) {
-        System.out.println(user.getAccountCode());
+        System.out.println(user.getCode());
         try {
             ForumDTO forum = forumService.getForumByForumCode(forumCode);
             return tool.res(HttpStatus.OK, "게시글 상세 내용입니다.", forum);
@@ -112,14 +117,18 @@ public class ForumController {
     //게시글 수정
     @PutMapping("/edit/{forumCode}")
     public ResponseEntity<ResponseDTO> editForum(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ForumDTO forumDTO, @PathVariable Long forumCode) {
-        System.out.println("sss");
         try {
             forumService.updateForum(forumCode, user.getUsername(), forumDTO);
             return tool.res(HttpStatus.OK, "게시글이 수정되었습니다.", null);
         } catch (IllegalArgumentException e) {
-            System.out.println("aaa");
             return tool.res(HttpStatus.BAD_REQUEST, e.getMessage(), null);
         }
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<ResponseDTO> getForumsPage(@PageableDefault(size = 8) Pageable pageable) {
+        Page<ForumDTO> forumsPage = forumService.getForumsPage(pageable);
+        return tool.res(HttpStatus.OK, "포럼 페이지 데이터", forumsPage);
     }
 }
 

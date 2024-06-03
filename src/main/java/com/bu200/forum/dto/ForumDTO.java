@@ -4,6 +4,7 @@ import com.bu200.forum.entity.Forum;
 import lombok.*;
 import org.aspectj.apache.bcel.classfile.Code;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,6 +27,7 @@ public class ForumDTO {
         this.forumCreateTime = forum.getForumCreateTime();
         this.accountCode = forum.getAccount() != null ? forum.getAccount().getAccountCode() : null;
     }
+
 }
 
 

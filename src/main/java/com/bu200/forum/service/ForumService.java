@@ -1,10 +1,10 @@
 package com.bu200.forum.service;
-
 import com.bu200.forum.dto.ForumDTO;
 import com.bu200.forum.entity.Forum;
 import com.bu200.forum.repository.ForumRepository;
 import com.bu200.login.entity.Account;
 import com.bu200.login.repository.AccountRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -108,6 +112,11 @@ public class ForumService {
         forumRepository.save(existingForum);
     }
 
+    // 페이지네이션
+    public Page<ForumDTO> getForumsPage(Pageable pageable) {
+        Page<Forum> forumPages = forumRepository.findAll(pageable);
+        return forumPages.map(this::convertToDto);
+    }
 
     private ForumDTO convertToDto(Forum forum) {
         return new ForumDTO(forum);
@@ -128,5 +137,7 @@ public class ForumService {
 
         return forum;
     }
+
+
 
 }

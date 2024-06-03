@@ -1,12 +1,12 @@
 package com.bu200.forum.entity;
 
 import com.bu200.login.entity.Account;
-import com.bu200.login.entity.Department;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,6 +43,8 @@ public class Forum {
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "account_code")
         private Account account;
+
+
 
 }
 
