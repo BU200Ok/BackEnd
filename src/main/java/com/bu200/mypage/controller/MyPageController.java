@@ -2,10 +2,8 @@ package com.bu200.mypage.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.common.response.Tool;
-import com.bu200.mypage.service.Dtos.MyPageAttendanceRequestDTO;
-import com.bu200.mypage.service.Dtos.MainPageDTO;
+import com.bu200.mypage.service.Dtos.*;
 import com.bu200.mypage.service.FindMyPageMainService;
-import com.bu200.mypage.service.Dtos.MainPageProjectSearchResponseDTO;
 import com.bu200.mypage.service.MyPageAttendanceService;
 import com.bu200.mypage.service.SearchMypageProjectService;
 import com.bu200.security.dto.CustomUserDetails;
@@ -14,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -31,21 +31,28 @@ public class MyPageController {
         this.myPageAttendanceService = myPageAttendanceService;
     }
 
-    //accountDTO(내 정보, 팀, 부서까지) + 프로젝트(description, status, 이미 완료한 프로젝트) +
-    //
+    //accountDTO(내 정보, 팀, 부서까지) + 프로젝트(description, status, 이미 완료한 프로젝트)
     @GetMapping("/mainpage")
     public ResponseEntity<ResponseDTO> myPageLoding(@AuthenticationPrincipal CustomUserDetails user){
         System.out.println(user.getUsername());
         MainPageDTO mainPageDTO = findMyPageMainService.FindAccountData(user.getUsername());
+        System.out.println("/n\n\n\n\n\n\n\n\n " + mainPageDTO.toString());
         return tool.res(HttpStatus.OK, "mainpageDTO입니다.", mainPageDTO);
     }
 
-//    //출퇴 관리
-//    @PostMapping("/mainpage/annual")
-//    public ResponseEntity<ResponseDTO> myPageProjectSearch(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceRequestDTO MyPageAttendanceRequestDTO){
-//        boolean status = myPageAttendanceService.myPageAttendanceCheck(user.getUsername(), MyPageAttendanceRequestDTO);
-//        return tool.res(HttpStatus.OK, "daf", true);
-//    }
+    //출퇴 관리
+    @PostMapping("/mainpage/attendance-go-work")
+    public ResponseEntity<ResponseDTO> myPageAttendanceGo(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceGoRequestDTO myPageAttendanceGoRequestDTO){
+        myPageAttendanceGoRequestDTO.setAttendanceGoWork(LocalDateTime.now());
+        MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = myPageAttendanceService.myPageAttendanceGoService(user.getUsername(), myPageAttendanceGoRequestDTO);
+        return tool.res(HttpStatus.OK, "출근 정상 처리되었습니다.", myPageAttendanceResponseDTO);
+    }
+    @PostMapping("/mainpage/attendance-leave-work")
+    public ResponseEntity<ResponseDTO> myPageAttendanceLeave(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MyPageAttendanceLeaveRequestDTO myPageAttendanceLeaveRequestDTO){
+        myPageAttendanceLeaveRequestDTO.setAttendanceLeaveWork(LocalDateTime.now());
+        MyPageAttendanceResponseDTO myPageAttendanceResponseDTO = myPageAttendanceService.myPageAttendanceLeaveService(user.getUsername(), myPageAttendanceLeaveRequestDTO);
+        return tool.res(HttpStatus.OK, "퇴근 정상 처리되었습니다.", myPageAttendanceResponseDTO);
+    }
 
     //프로젝트 검색
     @GetMapping("/mainpage/search-project")

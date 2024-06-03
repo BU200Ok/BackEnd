@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity @Table(name = "attendance")
 @Getter @Setter @NoArgsConstructor
 public class Attendance {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attendance_code")
     private Long attendanceCode;
 

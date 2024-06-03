@@ -43,4 +43,5 @@ logging:
 
 
 
-
+file:
+  upload-dir: C:\project-files\bu200ServerFile

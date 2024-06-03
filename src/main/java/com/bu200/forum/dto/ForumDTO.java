@@ -1,11 +1,10 @@
 package com.bu200.forum.dto;
 
 import com.bu200.forum.entity.Forum;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.aspectj.apache.bcel.classfile.Code;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,18 +17,16 @@ public class ForumDTO {
     private String forumTitle;
     private String forumContent;
     private LocalDateTime forumCreateTime;
-
-    public ForumDTO(Long forumCode, String forumType, String forumTitle, String forumContent, LocalDateTime forumCreateTime) {
-        this.forumCode = forumCode;
-        this.forumType = forumType;
-        this.forumTitle = forumTitle;
-        this.forumContent = forumContent;
-        this.forumCreateTime = forumCreateTime;
-    }
-
+    private Long accountCode;
 
     public ForumDTO(Forum forum) {
+        this.forumCode = forum.getForumCode();
+        this.forumType = forum.getForumType();
+        this.forumTitle = forum.getForumTitle();
+        this.forumContent = forum.getForumContent();
+        this.forumCreateTime = forum.getForumCreateTime();
+        this.accountCode = forum.getAccount() != null ? forum.getAccount().getAccountCode() : null;
     }
-}
 
+}
 

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Entity @Table(name = "department")
 @Getter @RequiredArgsConstructor
 public class Department {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_code")
     private Long departmentCode;
 

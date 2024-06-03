@@ -1,5 +1,6 @@
 package com.bu200.login.entity;
 
+import com.bu200.project.entity.AccountProject;
 import com.bu200.project.entity.Project;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -57,4 +58,9 @@ public class Account {
     @JoinColumn(name = "team_code")
     private Team team;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    private List<Project> projects;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    private List<AccountProject> accountProjects;
 }
