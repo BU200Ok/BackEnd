@@ -1,115 +1,63 @@
 package com.bu200.project.service;
 
-import com.bu200.exception.ProjectExistException;
 import com.bu200.login.entity.Account;
 import com.bu200.login.repository.AccountRepository;
-import com.bu200.project.dto.AccountDTO;
-import com.bu200.project.dto.AddProjectDTO;
-import com.bu200.project.dto.ProjectDTO;
+import com.bu200.project.dto.*;
+import com.bu200.project.entity.AccountProject;
 import com.bu200.project.entity.Project;
+import com.bu200.project.repository.AccountProjectRepository;
 import com.bu200.project.repository.ProjectRepository;
+import com.bu200.project.repository.TaskRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
-    private final ProjectRepository projectRepository;
-    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
-    public ProjectService(ProjectRepository projectRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
-        this.projectRepository = projectRepository;
-        this.accountRepository = accountRepository;
+    private final ProjectRepository projectRepository;
+    private final TaskRepository taskRepository;
+    private final AccountRepository accountRepository;
+    private final AccountProjectRepository accountProjectRepository;
+
+
+    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository, TaskRepository taskRepository, AccountRepository accountRepository, AccountProjectRepository accountProjectRepository) {
         this.modelMapper = modelMapper;
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
+        this.accountRepository = accountRepository;
+        this.accountProjectRepository = accountProjectRepository;
     }
 
-
-    /**모든 프로젝트를 가져온다.
-     * 한 페이지당 6개의 프로젝트를 가져와야한다.
-     * 가져올때 고려 요소
-     * 1. openstatus : true
-     * 2. priority : 오름차순 => 오름차순으로 가져오기만 하면 된다.
-     */
     @Transactional(readOnly = true)
-    public Page<ProjectDTO> getProject(Long accountCode, Pageable pageable){
-        Page<Project> findProjects = projectRepository.findAllByProjectOpenStatusIsTrueOrderByProjectPriorityAsc(pageable);
+    public ProjectDetailDTO projectDetail(Long projectCode){
+        ProjectDetailDTO projectDetailDTO = projectRepository.findProjectDetail(projectCode);
+        List<AccountDTO> accountDTOS = projectRepository.findProjectDeTailAccount(projectCode);
 
-        //page<엔티티>를 page<dto>로 바꿈
-        Page<ProjectDTO> projectDTOS = findProjects.map(myProject -> {
-            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
-            projectDTO.setTeamName(myProject.getTeam().getTeamName());
-            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
-            return projectDTO;
-        });
-        return projectDTOS;
-    }
+        projectDetailDTO.setAccounts(accountDTOS);
 
-    //내 팀의 프로젝트를 가져온다.
-    @Transactional(readOnly = true)
-    public Page<ProjectDTO> getMyProject(Long accountCode, Pageable pageable) {
-        Account findAccount = accountRepository.findByAccountCode(accountCode);
-        Long myTeamCode = findAccount.getTeam().getTeamCode();
-
-        Page<Project> findMyProjects = projectRepository.findAllByAccount_Team_TeamCodeAndProjectOpenStatusIsTrueOrderByProjectPriorityAsc(myTeamCode, pageable);
-        Page<ProjectDTO> projectDTOS = findMyProjects.map(myProject -> {
-            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
-            projectDTO.setTeamName(myProject.getTeam().getTeamName());
-            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
-            return projectDTO;
-        });
-
-
-        return projectDTOS;
-    }
-    @Transactional(readOnly = true)
-    public Page<ProjectDTO> getKewordProject(String keyword, Pageable pageable) {
-        Page<Project> projects = projectRepository.findAllByProjectNameContainingAndProjectOpenStatusIsTrue(keyword, pageable);
-        Page<ProjectDTO> projectDTOS = projects.map(myProject -> {
-            ProjectDTO projectDTO = modelMapper.map(myProject, ProjectDTO.class);
-            projectDTO.setTeamName(myProject.getTeam().getTeamName());
-            projectDTO.setDepartmentName(myProject.getTeam().getDepartment().getDepartmentName());
-            return projectDTO;
-        });
-        return projectDTOS;
+        return projectDetailDTO;
     }
 
     @Transactional
-    public AddProjectDTO addProject(Long userCode, AddProjectDTO addProjectDTO) {
-        Project findProject = projectRepository.findByProjectNameAndProjectOpenStatusIsTrue(addProjectDTO.getProjectName());
-        if(findProject != null){
-            throw new ProjectExistException("이미 존재하는 프로젝트");
-        }
+    public AddAccountProjectResponseDTO addAccount(AddAccountProjectRequestDTO addAccountProjectRequestDTO, Long projectCode) {
+        Account findAccount = accountRepository.findByAccountId(addAccountProjectRequestDTO.getAccountId());
+        Project findProject = projectRepository.findByProjectCode(projectCode);
 
-        Account findAccount = accountRepository.findByAccountCode(userCode);
+        accountProjectRepository.save(new AccountProject(null, findAccount, findProject));
 
-        Project saveProject = modelMapper.map(addProjectDTO, Project.class);
-        saveProject.setTeam(findAccount.getTeam());
-        saveProject.setAccount(findAccount);
-        saveProject = projectRepository.save(saveProject);
-        addProjectDTO = modelMapper.map(saveProject, AddProjectDTO.class);
-        addProjectDTO.setTeamName(findAccount.getTeam().getTeamName());
-        addProjectDTO.setAccountName(findAccount.getAccountName());
-        return addProjectDTO;
+        return modelMapper.map(findAccount, AddAccountProjectResponseDTO.class);
     }
 
-    public List<AccountDTO> getProjectAccount(Long projectCode) {
-        Account findAccount = projectRepository.findByProjectCode(projectCode).getAccount();
-        Long TeamCode = findAccount.getTeam().getTeamCode();
-        List<Account> accounts = accountRepository.findAllByTeam_TeamCode(TeamCode);
+    public boolean checkDuplicateAccountProject(AddAccountProjectRequestDTO addAccountProjectRequestDTO, Long projectCode){
+        AccountProject findAccountProject = accountProjectRepository.findByAccount_AccountIdAndProject_ProjectCode
+                (addAccountProjectRequestDTO.getAccountId(), projectCode);
 
-
-        return accounts.stream()
-                .map(account -> {
-                    AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
-                    accountDTO.setDepartmentName(account.getTeam().getDepartment().getDepartmentName());
-                    accountDTO.setTeamName(account.getTeam().getTeamName());
-                    return accountDTO;
-                }).collect(Collectors.toList());
-
+        if(findAccountProject != null){
+            return true;
+        }
+        return false;
     }
 }

@@ -18,4 +18,5 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     Account findByAccountCode(Long accountCode);
 
     List<Account> findAllByTeam_TeamCode(Long teamCode);
+
 }

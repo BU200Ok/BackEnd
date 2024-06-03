@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity @Table(name = "project")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
@@ -26,7 +27,7 @@ public class Project {
 
     @CreationTimestamp
     @Column(name = "project_start")
-    private Timestamp projectStart;
+    private LocalDate projectStart;
 
     @Column(name = "project_end")
     private LocalDate projectEnd;
@@ -43,11 +44,11 @@ public class Project {
     @Column(name = "project_status")
     private String projectStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)  //작성자 즉, 관리자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_code")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_code")
-    private Team team;
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<AccountProject> accountProjects;
 }

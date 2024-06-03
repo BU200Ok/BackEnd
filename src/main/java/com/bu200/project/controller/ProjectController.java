@@ -2,88 +2,90 @@ package com.bu200.project.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.common.response.Tool;
-import com.bu200.login.repository.AccountRepository;
-import com.bu200.project.dto.*;
-import com.bu200.project.service.ProjectService;
+import com.bu200.project.dto.AddProjectRequestDTO;
+import com.bu200.project.dto.AddProjectResponseDTO;
+import com.bu200.project.dto.AllProjectResponseDTO;
+import com.bu200.project.dto.ProjectDTO;
+import com.bu200.project.service.ProjectsService;
 import com.bu200.security.dto.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
     private final Tool tool;
-    private final ProjectService projectService;
+    private final ProjectsService projectsService;
 
-    public ProjectController(Tool tool, AccountRepository accountRepository, ProjectService projectService) {
+    public ProjectController(Tool tool, ProjectsService projectsService) {
         this.tool = tool;
-        this.projectService = projectService;
+        this.projectsService = projectsService;
     }
 
-    //전체 프로젝트 가져오기
+    /**
+     * 프로젝트들을 불러온다.
+     * projectName, projectStart, projectEnd, projectStatus, departmentName, teamName
+     * account들
+     */
     @GetMapping("/get-project")
-    public ResponseEntity<ResponseDTO> getAllProject(@AuthenticationPrincipal CustomUserDetails user,
-                                                     @RequestParam Integer page){
-        /**user가 포함된 팀의 모든 프로젝트를 가져온다.
-         * 만약 user가 관리자라면, 모든 프로젝트를 가져온다.
-         * 한 페이지당 6개의 프로젝트를 가져와야한다.
-         * 가져올때 고려 요소
-         * 1. openstatus : true
-         * 2. priority : 오름차순
-         * 3. 유저가 관리자인지 아닌지
-         */
+    public ResponseEntity<ResponseDTO> projects(@RequestParam(name = "page")Integer page){
         Pageable pageable = PageRequest.of(page, 6);
+        Page<ProjectDTO> projects = projectsService.projects(pageable);
 
-        Long userCode = Long.valueOf(user.getCode());
-        Page<ProjectDTO> projectDTOS = projectService.getProject(userCode, pageable);
-
-        System.out.println(projectDTOS.getContent());
-        return tool.res(HttpStatus.OK, "모든 프로젝트 목록입니다", projectDTOS);
+        return tool.res(HttpStatus.OK, "프로젝트들입니다.", projects);
     }
 
-    //프로젝트 검색
-    public ResponseEntity<ResponseDTO> searchProject(@RequestParam String word,
-                                                     @RequestParam Integer page){
-        Pageable pageable = PageRequest.of(page, 6);
-
-        Page<ProjectDTO> projectDTOS = projectService.getKewordProject(word, pageable);
-        return tool.res(HttpStatus.OK,"키워드가 포함된 프로젝트입니다.", projectDTOS);
-    }
-
-
-    //내 프로젝트 가져오기
+    /**
+     * 위와 동일
+     */
     @GetMapping("/get-my-project")
-    public ResponseEntity<ResponseDTO> getMyProject(@AuthenticationPrincipal CustomUserDetails user,
-                                                    @RequestParam Integer page){
+    public ResponseEntity<ResponseDTO> myProjects(@AuthenticationPrincipal CustomUserDetails user,
+                                                  @RequestParam(name = "page")Integer page){
         Pageable pageable = PageRequest.of(page, 6);
-        Long userCode = Long.valueOf(user.getCode());
-        Page<ProjectDTO> projectDTOS = projectService.getMyProject(userCode, pageable);
+        Page<ProjectDTO> projects = projectsService.myProjects(Long.valueOf(user.getCode()), pageable);
 
-        return tool.res(HttpStatus.OK, "내 팀의 모든 프로젝트 목록입니다.", projectDTOS);
+        return tool.res(HttpStatus.OK, "내 프로젝트들입니다.", projects);
+    }
+    /**
+     *키워드를 포함한 프로젝트들을 불러온다.
+     */
+    @GetMapping("/get-search-all-project")
+    public ResponseEntity<ResponseDTO> searchProjects(@RequestParam(name = "page")Integer page,
+                                                      @RequestParam(name = "keyword") String keyword){
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<ProjectDTO> projects = projectsService.searchProjects(keyword, pageable);
+
+        return tool.res(HttpStatus.OK, "키워드가 포함된 프로젝트", projects);
     }
 
-    //프로젝트 만들기
-    @PostMapping
+    @GetMapping("/get-search-my-project")
+    public ResponseEntity<ResponseDTO> searchMyProjects(@AuthenticationPrincipal CustomUserDetails user,
+                                                        @RequestParam(name = "page")Integer page,
+                                                        @RequestParam(name = "keyword") String keyword){
+        Pageable pageable = PageRequest.of(page, 6);
+        Page<ProjectDTO> projects = projectsService.searchMyProjects(Long.valueOf(user.getCode()), keyword, pageable);
+
+        return tool.res(HttpStatus.OK, "키워드가 포함된 내 프로젝트", projects);
+    }
+
+    @PostMapping("/add")
     public ResponseEntity<ResponseDTO> addProject(@AuthenticationPrincipal CustomUserDetails user,
-                                                  @RequestBody AddProjectDTO addProjectDTO){
-        Long userCode = Long.valueOf(user.getCode());
-        AddProjectDTO addProjectResponseDTO = projectService.addProject(userCode, addProjectDTO);
+                                                  @RequestBody AddProjectRequestDTO addProjectRequestDTO){
+        addProjectRequestDTO.setProjectStart(LocalDate.now());
+        if(projectsService.checkDuplicateName(addProjectRequestDTO.getProjectName())){
+            return tool.resErr("중복된 이름의 프로젝트 존재");
+        }
+        AddProjectResponseDTO addProjectResponseDTO = projectsService.addProject(Long.valueOf(user.getCode()), addProjectRequestDTO);
 
-        return tool.res(HttpStatus.OK, "프로젝트 추가 완료", addProjectResponseDTO);
-    }
+        return tool.res(HttpStatus.OK, "추가 성공", addProjectResponseDTO);
 
-    @GetMapping("/{projectCode}")
-    public ResponseEntity<ResponseDTO> getAccount(@PathVariable Long projectCode){
-        List<AccountDTO> accountDTOS = projectService.getProjectAccount(projectCode);
-
-        return tool.res(HttpStatus.OK, "팀 프로젝트의 모든 팀 account입니다.", accountDTOS);
     }
 }

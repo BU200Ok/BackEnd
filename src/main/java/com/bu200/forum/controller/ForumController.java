@@ -3,7 +3,6 @@ import com.bu200.common.response.ResponseDTO;
 import com.bu200.forum.dto.ForumDTO;
 import com.bu200.common.response.Tool;
 import com.bu200.forum.entity.Forum;
-import com.bu200.forum.service.ForumFileService;
 import com.bu200.forum.service.ForumService;
 import com.bu200.mypage.service.Dtos.MainPageDTO;
 import com.bu200.mypage.service.FindMyPageMainService;
@@ -22,14 +21,11 @@ import org.springframework.data.domain.Page;
 @Controller
 public class ForumController {
     private final ForumService forumService;
-
-    private final ForumFileService forumFileService;
     private final FindMyPageMainService findMyPageMainService;
     private final Tool tool;
 
-    public ForumController(ForumService forumService, ForumFileService forumFileService, FindMyPageMainService findMyPageMainService, Tool tool) {
+    public ForumController(ForumService forumService, FindMyPageMainService findMyPageMainService, Tool tool) {
         this.forumService = forumService;
-        this.forumFileService = forumFileService;
         this.findMyPageMainService = findMyPageMainService;
         this.tool = tool;
     }
@@ -131,7 +127,6 @@ public class ForumController {
         return tool.res(HttpStatus.OK, "포럼 페이지 데이터", forumsPage);
     }
 }
-
 
 
 

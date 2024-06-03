@@ -7,14 +7,18 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter@Setter@AllArgsConstructor@NoArgsConstructor
-public class TaskDTO {  //추가 시 줘야할 부분 o로 표시
+public class TaskDTO {
     private Long taskCode;
-    private String taskName;    //o
-    private String taskDetail;  //o
+    private String taskName;
+    private String taskDetail;
     private String taskType;
+    private String taskTypeDetail;
     private Timestamp taskStart;
-    private String taskStatus;  //o
-    private LocalDate taskEnd;  //o
+    private String taskStatus;
+    private LocalDate taskEnd;
+
+    private List<String> accountName;
 }

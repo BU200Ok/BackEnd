@@ -98,7 +98,7 @@ public class ForumService {
 
     //수정
     @Transactional
-    public void updateForum(Long forumCode, String accountId, ForumDTO forumDTO){
+    public void updateForum(Long forumCode, String accountId, ForumDTO forumDTO) {
         if (!forumRepository.existsByForumCodeAndAccount_AccountId(forumCode, accountId)) {
             throw new IllegalArgumentException("게시글을 찾을 수 없거나 사용자가 작성한 게시글이 아닙니다.");
         }
@@ -137,7 +137,4 @@ public class ForumService {
 
         return forum;
     }
-
-
-
 }

@@ -5,14 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.List;
 
-@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+@Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class TaskPostDTO {
     private Long taskPostCode;
     private String taskPostDetail;
-    private Timestamp taskPostTime;
-    private Timestamp taskPostModifyTime;
+    private LocalDate taskPostTime;
 
     private String accountName;
+    private String teamName;
+
+    List<TaskFileDTO> taskFileDTOS;
 }

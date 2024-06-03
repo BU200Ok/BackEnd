@@ -1,17 +1,19 @@
 package com.bu200.project.dto;
 
-import com.bu200.login.entity.Team;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter@Setter@NoArgsConstructor@AllArgsConstructor
+@Getter@Setter@NoArgsConstructor
 public class AccountDTO {
+    public AccountDTO(String accountName, String accountPosition, String teamName, String departmentName) {
+        this.accountName = accountName;
+        this.accountPosition = accountPosition;
+        this.teamName = teamName;
+        this.departmentName = departmentName;
+    }
+
     private String accountName;
     private String accountPosition;
 
-    private String departmentName;
     private String teamName;
-
+    private String departmentName;
 }
