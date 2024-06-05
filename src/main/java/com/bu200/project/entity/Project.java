@@ -45,7 +45,6 @@ public class Project {
     private String projectStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)  //작성자 즉, 관리자
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_code")
     private Account account;
 

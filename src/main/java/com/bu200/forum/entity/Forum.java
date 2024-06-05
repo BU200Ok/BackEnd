@@ -1,5 +1,6 @@
 package com.bu200.forum.entity;
 
+import com.bu200.comment.entity.Comment;
 import com.bu200.login.entity.Account;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +44,9 @@ public class Forum {
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "account_code")
         private Account account;
+
+        @OneToMany(mappedBy = "forum", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+        private List<Comment> comment;
 
 
 
