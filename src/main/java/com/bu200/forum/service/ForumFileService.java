@@ -1,14 +1,15 @@
 package com.bu200.forum.service;
 
+
 import com.bu200.common.response.Tool;
 import com.bu200.forum.entity.Forum;
 import com.bu200.forum.entity.ForumFile;
 import com.bu200.forum.repository.ForumFileRepository;
 import com.bu200.forum.repository.ForumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -16,6 +17,9 @@ public class ForumFileService {
     private final Tool tool;
     private final ForumRepository forumRepository;
     private final ForumFileRepository forumFileRepository;
+
+    @Value("${file.upload-dir}")
+    private String directPath;
 
     @Autowired
     public ForumFileService(Tool tool, ForumRepository forumRepository, ForumFileRepository forumFileRepository) {
@@ -42,6 +46,5 @@ public class ForumFileService {
             throw new RuntimeException("File upload failed");
         }
     }
-
 }
 
