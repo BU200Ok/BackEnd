@@ -6,6 +6,7 @@ import com.bu200.project.service.FileService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,15 +34,18 @@ public class FileController {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<ResponseDTO> downloadFile(@RequestParam String fileName) throws IOException {
-        Path path = Paths.get(directPath + fileName);
-        if(Files.exists(path)){
+    public ResponseEntity<?> loadFile(@RequestParam String fileName) throws IOException {
+        Path path = Paths.get(directPath + File.separator + fileName);
+
+        if (Files.exists(path)) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+
             ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
-            return tool.res(HttpStatus.OK, "파일입니다.", resource);
-        }else{
-            return tool.resErr("파일이 없습니다.");
+            return ResponseEntity.ok().headers(headers).body(resource);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일이 없습니다.");
         }
     }
-
 }
