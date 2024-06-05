@@ -9,14 +9,15 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/file")
@@ -29,6 +30,14 @@ public class FileController {
     public FileController(Tool tool, FileService fileService) {
         this.tool = tool;
         this.fileService = fileService;
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@RequestPart List<MultipartFile> files){
+        List<String> changedFilesName = new ArrayList<>();
+        for(MultipartFile file : files){
+            changedFilesName.add(tool.upload(file));
+        }
+        return ResponseEntity.ok().body(changedFilesName);
     }
 
     @GetMapping("/download")

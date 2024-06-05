@@ -58,6 +58,16 @@ public class ForumService {
                 .collect(Collectors.toList());
     }
 
+    //관리자 게시글 조회
+    public List<ForumDTO> findForumsByAccountRole() {
+        List<Forum> forums = forumRepository.findByAccount_AccountRole("ROLE_ADMIN");
+        return forums.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+
     //AccountCode 찾기
     public Account findByAccountCode(Long accountCode) {
         return accountRepository.findById(accountCode).orElse(null);

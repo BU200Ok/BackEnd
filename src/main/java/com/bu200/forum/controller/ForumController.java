@@ -30,11 +30,15 @@ public class ForumController {
         this.tool = tool;
     }
 
-    //공지사항(전체 확인)
+    //공지사항(관리자)
     @GetMapping("/public")
-    public ResponseEntity<ResponseDTO> getAllDepartmentsForums(@AuthenticationPrincipal CustomUserDetails user) {
-        List<ForumDTO> forums = forumService.getAllForums();
-        return tool.res(HttpStatus.OK, "모든 포럼 데이터", forums);
+    public ResponseEntity<ResponseDTO> getAdminForums(@AuthenticationPrincipal CustomUserDetails user) {
+        try {
+            List<ForumDTO> forums = forumService.findForumsByAccountRole();
+            return tool.res(HttpStatus.OK, "관리자 게시글 목록.", forums);
+        } catch (Exception e) {
+            return tool.res(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
     }
 
     // 부서별 게시판

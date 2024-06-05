@@ -19,6 +19,8 @@ public interface ForumRepository extends JpaRepository<Forum,Long> {
     // 내가 쓴 글 확인
     List<Forum> findByAccount_AccountId(String userName);
 
+    List<Forum> findByAccount_AccountRole(String accountRole);
+
     //게시글 조회
     Optional<Forum> findByForumCode(Long forumCode);
 
