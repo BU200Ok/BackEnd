@@ -1,4 +1,4 @@
-package com.bu200.mypage.service.Dtos;
+package com.bu200.mypage.service.DTO;
 
 import lombok.*;
 

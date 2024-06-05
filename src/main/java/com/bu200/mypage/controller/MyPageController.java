@@ -2,7 +2,7 @@ package com.bu200.mypage.controller;
 
 import com.bu200.common.response.ResponseDTO;
 import com.bu200.common.response.Tool;
-import com.bu200.mypage.service.Dtos.*;
+import com.bu200.mypage.service.DTO.*;
 import com.bu200.mypage.service.FindMyPageMainService;
 import com.bu200.mypage.service.MyPageAttendanceService;
 import com.bu200.mypage.service.SearchMypageProjectService;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

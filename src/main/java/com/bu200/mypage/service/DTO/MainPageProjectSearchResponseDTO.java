@@ -1,10 +1,8 @@
-package com.bu200.mypage.service.Dtos;
+package com.bu200.mypage.service.DTO;
 
-import com.bu200.project.entity.Project;
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter

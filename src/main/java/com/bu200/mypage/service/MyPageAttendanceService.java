@@ -7,12 +7,16 @@ import com.bu200.login.entity.Account;
 import com.bu200.login.entity.Attendance;
 import com.bu200.login.repository.AccountRepository;
 import com.bu200.mypage.repository.MyPageAttendanceRepository;
-import com.bu200.mypage.service.Dtos.MyPageAttendanceGoRequestDTO;
-import com.bu200.mypage.service.Dtos.MyPageAttendanceLeaveRequestDTO;
-import com.bu200.mypage.service.Dtos.MyPageAttendanceResponseDTO;
+import com.bu200.mypage.service.DTO.MyPageAttendanceGoRequestDTO;
+import com.bu200.mypage.service.DTO.MyPageAttendanceLeaveRequestDTO;
+import com.bu200.mypage.service.DTO.MyPageAttendanceResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class MyPageAttendanceService {
@@ -27,6 +31,8 @@ public class MyPageAttendanceService {
 
     @Transactional
     public MyPageAttendanceResponseDTO myPageAttendanceGoService(String accountId, MyPageAttendanceGoRequestDTO myPageAttendanceGoRequestDTO) {
+        if(checkAttendance(myPageAttendanceGoRequestDTO)){myPageAttendanceGoRequestDTO.setAttendanceStatus("지각");}  //9:00보다 늦을 시 attendanceStatus에 지각 처리
+
         /*
         마지막 시간 attendance table에서 불러오기
         MyPageAttendanceGoRequestDTO의 attendanceDate와
@@ -44,7 +50,7 @@ public class MyPageAttendanceService {
         if(findAttendance == null) {                        //처음 출근하는 경우 새로 만들어 저장
             modelMapper.map(myPageAttendanceGoRequestDTO, saveAttendance);
             saveAttendance.setAccount(account);
-
+            saveAttendance.setAttendanceDate(LocalDate.now());
             myPageAttendanceRepository.save(saveAttendance); //저장
             modelMapper.map(saveAttendance, myPageAttendanceResponseDTO);   //반환 값 세팅
 
@@ -55,6 +61,7 @@ public class MyPageAttendanceService {
             }else{
                 modelMapper.map(myPageAttendanceGoRequestDTO, saveAttendance);
                 saveAttendance.setAccount(account);
+                saveAttendance.setAttendanceDate(LocalDate.now());
                 myPageAttendanceRepository.save(saveAttendance);
                 modelMapper.map(saveAttendance, myPageAttendanceResponseDTO);
             }
@@ -83,5 +90,17 @@ public class MyPageAttendanceService {
 
         }
         return myPageAttendanceResponseDTO;
+    }
+
+
+    public static <T> boolean checkAttendance(T attendance){        //출석에 무언가 문제가 있으면 true 반환 즉, goAttendance에서 true가 나오면 지각이라는 뜻
+        if(attendance instanceof MyPageAttendanceGoRequestDTO){
+            return checkLate(((MyPageAttendanceGoRequestDTO) attendance).getAttendanceGoWork());  //지각이면 true를 반환
+        }
+        return true;
+    }
+
+    public static boolean checkLate(LocalDateTime localDateTime){
+        return localDateTime.toLocalTime().isAfter(LocalTime.of(9, 0)); //지각이면 true를 반환 //00시 지나면 모두 정상처리 되는거 어떻게 할지 고민
     }
 }

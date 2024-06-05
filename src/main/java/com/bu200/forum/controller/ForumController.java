@@ -4,7 +4,7 @@ import com.bu200.forum.dto.ForumDTO;
 import com.bu200.common.response.Tool;
 import com.bu200.forum.entity.Forum;
 import com.bu200.forum.service.ForumService;
-import com.bu200.mypage.service.Dtos.MainPageDTO;
+import com.bu200.mypage.service.DTO.MainPageDTO;
 import com.bu200.mypage.service.FindMyPageMainService;
 import com.bu200.security.dto.CustomUserDetails;
 import org.springframework.data.domain.Pageable;
