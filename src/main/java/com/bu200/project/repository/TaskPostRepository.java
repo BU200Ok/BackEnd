@@ -17,4 +17,5 @@ public interface TaskPostRepository extends JpaRepository<TaskPost, Long> {
             "where tp.taskPostCode = :taskPostCode")
     List<TaskPost> findAllTaskPost(@Param("taskPostCode")Long taskPostCode);
 
+    TaskPost findTaskPostByTaskPostCode(Long taskPostCode);
 }

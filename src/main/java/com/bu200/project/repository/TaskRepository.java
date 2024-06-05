@@ -51,4 +51,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "left join fetch at.account " +
             "where t.taskCode in :taskCodes")
     List<Task> findAllTasks(@Param("taskCodes") List<Long> taskCodes);
+
+    Task findTaskByTaskCode(Long taskCode);
 }
