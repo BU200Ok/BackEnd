@@ -1,8 +1,7 @@
 package com.bu200.mypage.service;
 
 import com.bu200.mypage.repository.FindMyPageProjectRepository;
-import com.bu200.mypage.service.Dtos.MainPageProjectSearchRequestDTO;
-import com.bu200.mypage.service.Dtos.MainPageProjectSearchResponseDTO;
+import com.bu200.mypage.service.DTO.MainPageProjectSearchResponseDTO;
 import com.bu200.project.entity.Project;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;

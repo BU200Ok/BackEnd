@@ -1,17 +1,18 @@
 package com.bu200.project.dto;
 
-import com.bu200.project.entity.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class AddTaskPostDTO {
     private Long taskPostCode;
-    private String taskPostDetail;
-    private Timestamp taskPostTime;
+    private String taskPostDetail;  //o
+    private Timestamp taskPostTime; //o
     private Timestamp taskPostModifyTime;
+    private boolean taskPostOpenStatus = true;
 }

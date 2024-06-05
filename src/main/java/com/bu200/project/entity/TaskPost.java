@@ -30,7 +30,7 @@ public class TaskPost {
 
     @UpdateTimestamp
     @Column(name = "task_post_modify_time")
-    private LocalDate taskPostModifyTime;
+    private Timestamp taskPostModifyTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_code")

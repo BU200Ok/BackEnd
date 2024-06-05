@@ -7,7 +7,7 @@ import com.bu200.login.entity.Team;
 import com.bu200.mypage.repository.FindAccountDataRepository;
 import com.bu200.mypage.repository.FindMyPageProjectRepository;
 import com.bu200.mypage.repository.MyPageAttendanceRepository;
-import com.bu200.mypage.service.Dtos.MainPageDTO;
+import com.bu200.mypage.service.DTO.MainPageDTO;
 import com.bu200.project.entity.Project;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;

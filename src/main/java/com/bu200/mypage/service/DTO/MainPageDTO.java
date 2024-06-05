@@ -1,9 +1,6 @@
-package com.bu200.mypage.service.Dtos;
-
-import com.bu200.login.entity.Team;
+package com.bu200.mypage.service.DTO;
 
 import lombok.*;
-import org.modelmapper.internal.bytebuddy.build.ToStringPlugin;
 
 import java.time.LocalDateTime;
 import java.util.Date;
