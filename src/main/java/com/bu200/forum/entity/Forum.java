@@ -48,6 +48,9 @@ public class Forum {
         @OneToMany(mappedBy = "forum", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
         private List<Comment> comment;
 
+        @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<ForumFile> forumFiles;
+
 
 
 }
