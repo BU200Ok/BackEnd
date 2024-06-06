@@ -34,8 +34,9 @@ public class FileController {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<?> loadFile(@RequestParam String fileName) throws IOException {
-        Path path = Paths.get(directPath + File.separator + fileName);
+    public ResponseEntity<?> loadFile(@RequestParam String changedFileName) throws IOException {
+        Path path = Paths.get(directPath + File.separator + changedFileName);
+        System.out.println(path);
 
         if (Files.exists(path)) {
             HttpHeaders headers = new HttpHeaders();
