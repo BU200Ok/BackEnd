@@ -48,7 +48,6 @@ public class ProjectTaskPostController {
     @PostMapping("/{taskCode}/task-posts/{taskPostCode}/files/add")
     public ResponseEntity<ResponseDTO> addTaskFile(@PathVariable Long taskPostCode,
                                                    @RequestParam List<MultipartFile> files){
-        for(MultipartFile file : files) tool.upload(file);
         List<AddTaskFileDTO> addTaskFileDTOS = taskFileService.addTaskFile(taskPostCode, files);
 
         return tool.res(HttpStatus.OK, "완성되었습니다.", addTaskFileDTOS);

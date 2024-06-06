@@ -50,6 +50,7 @@ public class Tool {
         if(file.getOriginalFilename() != null) {
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());            //파일 이름
             String changedFileName = UUID.randomUUID() + "_" + originalFileName;                    //변경된 파일 이름은 랜덤 UUID_원본파일명 형식으로 저장된다.
+            System.out.println(changedFileName);
             try{
                 String filePath = uploadDir + File.separator + changedFileName;
                 File dest = new File(filePath);

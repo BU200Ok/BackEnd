@@ -1,7 +1,7 @@
 package com.bu200.project.service;
 
+import com.bu200.common.response.Tool;
 import com.bu200.project.dto.AddTaskFileDTO;
-import com.bu200.project.dto.TaskFileDTO;
 import com.bu200.project.entity.TaskFile;
 import com.bu200.project.entity.TaskPost;
 import com.bu200.project.repository.TaskFileRepository;
@@ -23,14 +23,16 @@ public class TaskFileService {
     private final ModelMapper modelMapper;
     private final TaskFileRepository taskFileRepository;
     private final TaskPostRepository taskPostRepository;
+    private final Tool tool;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    public TaskFileService(ModelMapper modelMapper, TaskFileRepository taskFileRepository, TaskPostRepository taskPostRepository) {
+    public TaskFileService(ModelMapper modelMapper, TaskFileRepository taskFileRepository, TaskPostRepository taskPostRepository, Tool tool) {
         this.modelMapper = modelMapper;
         this.taskFileRepository = taskFileRepository;
         this.taskPostRepository = taskPostRepository;
+        this.tool = tool;
     }
 
     @Transactional
@@ -39,9 +41,10 @@ public class TaskFileService {
         List<AddTaskFileDTO> addTaskFileDTOS = new ArrayList<>();
 
         for(MultipartFile file : files) {
+            String changedFileName = tool.upload(file); //파일 업로드 후 uuid가 포함된 파일 이름을 가져온다.
+
             TaskFile saveTaskFile = new TaskFile();
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());            //파일 이름
-            String changedFileName = UUID.randomUUID() + "_" + originalFileName;
             saveTaskFile.setTaskFileName(originalFileName);
             saveTaskFile.setTaskFileRename(changedFileName);
             saveTaskFile.setTaskFileSize(file.getSize());
