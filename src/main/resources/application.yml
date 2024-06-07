@@ -44,7 +44,5 @@ logging:
   level:
     root: info
 
-
-
 file:
   upload-dir: C:\project-files\bu200ServerFile
