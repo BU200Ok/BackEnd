@@ -49,4 +49,7 @@ public class Task {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
     private List<AccountTask> accountTasks;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+    private List<TaskPost> taskPosts;
 }

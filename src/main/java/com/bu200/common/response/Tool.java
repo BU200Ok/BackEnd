@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpHeaders.*;
+
 @Component
 public class Tool {
     private final ModelMapper modelMapper;
@@ -31,6 +33,11 @@ public class Tool {
 
     public ResponseEntity<ResponseDTO> res(HttpStatus code, String msg, Object data){
         return ResponseEntity.ok().body(new ResponseDTO(code, msg, data));
+    }
+    public ResponseEntity<?> resFile(Object data){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+        return ResponseEntity.ok().headers(headers).body(data);
     }
     public ResponseEntity<ResponseDTO> resErr(String msg){
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.BAD_REQUEST,msg, null));
