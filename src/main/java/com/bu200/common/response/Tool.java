@@ -2,6 +2,8 @@ package com.bu200.common.response;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -68,6 +73,18 @@ public class Tool {
                 System.err.println(e.getMessage());
                 return null;
             }
+        }
+        return null;
+    }
+
+    //파일이 경로 상에 없을 시 null 반환 changedFileName(ex. f605ac83-c993-4055-a753-da53bbc9c5f7_백엔드 공부 로드맵.txt
+    //처럼 uuid + originalFileName + 확장자 풀 네임으로
+    //사용 시 header에 headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream"); 추가해서
+    //return ResponseEntity.ok().headers(headers).body(resource); 이런 식으로 보내주기
+    public ByteArrayResource downloads(String changedFileName) throws IOException {
+        Path path = Paths.get(uploadDir + File.separator + changedFileName);
+        if (Files.exists(path)) {
+            return new ByteArrayResource(Files.readAllBytes(path));
         }
         return null;
     }
