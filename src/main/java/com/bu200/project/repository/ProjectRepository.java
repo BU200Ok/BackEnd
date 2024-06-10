@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query("SELECT p.projectCode FROM Project p " +
             "WHERE p.projectOpenStatus = true " +
-            "ORDER BY p.projectPriority ASC")
+            "ORDER BY p.projectPriority DESC ")
     Page<Long> findProjectCodes(Pageable pageable);
 
     @Query("select distinct p from Project p " +
@@ -33,21 +33,21 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query("SELECT p.projectCode from Project p " +
             "WHERE p.projectOpenStatus = true " +
             "AND p.account.accountCode = :accountCode " +
-            "ORDER BY p.projectPriority ASC")
+            "ORDER BY p.projectPriority desc ")
     Page<Long> findMyProjectCodes(@Param("accountCode") Long accountCode, Pageable pageable);
 
 
     @Query("SELECT p.projectCode from Project p " +
             "where p.projectOpenStatus = true " +
             "and p.projectName like %:keyword% " +
-            "order by p.projectPriority ASC ")
+            "order by p.projectPriority desc ")
     Page<Long> searchProjectsByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p.projectCode from Project p " +
             "where p.projectOpenStatus = true " +
             "and p.projectName like %:keyword% " +
             "and p.account.accountCode = :accountCode " +
-            "ORDER BY p.projectPriority asc")
+            "ORDER BY p.projectPriority desc")
     Page<Long> searchMyProjectsByKeyword(@Param("keyword") String keyword,
                                          @Param("accountCode") Long accountCode,
                                          Pageable pageable);
