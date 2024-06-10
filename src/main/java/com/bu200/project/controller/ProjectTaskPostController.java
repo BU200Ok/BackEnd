@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects/{projectCode}/tasks/{taskType}/{taskTypeDetail}")
+@RequestMapping("/projects/tasks")
 public class ProjectTaskPostController {
 
     private final TaskPostService taskPostService;
