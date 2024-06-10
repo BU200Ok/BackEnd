@@ -11,5 +11,10 @@ import java.util.List;
 public interface FindMyPageProjectRepository extends JpaRepository<Project, Long> {
     //우선순위가 가장 높은, projectOpenStatus가 true인 내 프로젝트를 오름차순으로 찾아와라
     List<Project> findByAccount_AccountIdAndProjectOpenStatusIsTrueOrderByProjectPriorityDesc(String accountId);
-    List<Project> findProjectByAccount_AccountIdAndProjectNameContaining(String accountId, String keyword);
+
+    @Query("select p from Project p " +
+            "join p.accountProjects ap " +
+            "where ap.account.accountId = :accountId " +
+            "and p.projectName like %:keyword%")
+    List<Project> findProject(String accountId, String keyword);
 }

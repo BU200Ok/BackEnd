@@ -23,7 +23,10 @@ public class SearchMypageProjectService {
 
     @Transactional(readOnly = true)
     public List<MainPageProjectSearchResponseDTO> myPageProjectSearchService(String accountId, String keyword){
-        List<Project> projects = findMyPageProjectRepository.findProjectByAccount_AccountIdAndProjectNameContaining(accountId, keyword);
+        List<Project> projects = findMyPageProjectRepository.findProject(accountId, keyword);
+        for(Project project: projects){
+            System.out.println(project.toString());
+        }
         if(projects.isEmpty()){
             throw new EntityNotFoundException("keword: " + accountId+ " + "+ keyword +" 인 엔티티들이 존재하지 않습니다.");
         }

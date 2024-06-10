@@ -2,6 +2,7 @@ package com.bu200.mypage.service.DTO;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,8 +33,8 @@ public class MainPageDTO {
     //project
     private Long projectCode;
     private String projectName;
-    private Date projectStart;
-    private Date projectEnd;
+    private LocalDate projectStart;
+    private LocalDate projectEnd;
     private Integer projectPriority;
     private String projectStatus;   //inprogress
     private String projectDescription;  //todo
