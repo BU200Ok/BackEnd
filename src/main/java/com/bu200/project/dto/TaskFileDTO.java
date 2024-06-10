@@ -9,6 +9,7 @@ import lombok.Setter;
 public class TaskFileDTO {
     private Long taskFileCode;
     private String taskFileName;
+    private String taskFileRename;
     private String taskFileSize;
     private String taskFilePath;
 }
