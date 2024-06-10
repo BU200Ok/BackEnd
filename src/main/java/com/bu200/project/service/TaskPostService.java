@@ -49,6 +49,7 @@ public class TaskPostService {
         List<TaskPostDTO> taskPostDTOS = taskPosts.stream()
                 .map(taskPost -> {
                     TaskPostDTO taskPostDTO = modelMapper.map(taskPost, TaskPostDTO.class);
+                    taskPostDTO.setTaskPostTime(taskPost.getTaskPostTime().toLocalDateTime().toLocalDate());
                     modelMapper.map(taskPost.getAccount(), taskPostDTO);
                     modelMapper.map(taskPost.getAccount().getTeam(), taskPostDTO);
                     List<TaskFileDTO> taskFileDTOS = taskPost.getTaskFiles().stream()
