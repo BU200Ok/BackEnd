@@ -28,7 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
         System.out.println("토큰 검사하러 왔다 from JWTFilter");
-        System.out.println("토큰 : "+request.getHeader("Authentication"));
+        System.out.println("토큰 : "+request.getHeader("Authorization"));
         String authorization = request.getHeader("Authorization");
         if(authorization == null || !authorization.startsWith("Bearer ")){
             System.out.println("token이 없거나, Bearer가 포함되어 있지 않습니다.");

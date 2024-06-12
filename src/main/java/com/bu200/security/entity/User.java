@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -30,7 +31,7 @@ public class User {
     @Column(name = "account_address")
     private String accountAddress;
     @Column(name = "account_join_date")
-    private Date accountJoinDate;
+    private LocalDate accountJoinDate;
     @Column(name = "account_position")
     private String accountPosition;
     @Column(name = "account_resign_date")
