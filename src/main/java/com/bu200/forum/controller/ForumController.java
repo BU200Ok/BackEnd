@@ -58,9 +58,11 @@ public class ForumController {
 
     //개인정보 가져오기(로그인한 사용자)
     @GetMapping("/myinfo")
-    public ResponseEntity<ResponseDTO> myInfoLoding(@AuthenticationPrincipal CustomUserDetails user) {
-        System.out.println(user.getUsername());
+    public ResponseEntity<ResponseDTO> myInfoLoading(@AuthenticationPrincipal CustomUserDetails user) {
+        System.out.println(user.getUsername()+"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         MainPageDTO mainPageDTO = findMyPageMainService.FindAccountData(user.getUsername());
+        System.out.println("myinfo입니다. \n\n\n\n\n\n\n\n\n\n"
+        +mainPageDTO.toString());
         return tool.res(HttpStatus.OK, "mainpageDTO입니다.", mainPageDTO);
     }
 

@@ -11,6 +11,9 @@ import com.bu200.mypage.service.DTO.MainPageDTO;
 import com.bu200.project.entity.Project;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,25 +37,14 @@ public class FindMyPageMainService {
 
     @Transactional(readOnly = true)
     public MainPageDTO FindAccountData(String accountId){
-
-            Account account = findAccountDataRepository.findByAccountId(accountId);
-            Team team = account.getTeam();
-            Department department = team.getDepartment();
-            if(account == null){
-                throw new EntityNotFoundException("accountId:" + accountId + "인 계정이 없습니다.");
-            }
-            List<Project> projects = findMyPageProjectRepository.findByAccount_AccountIdAndProjectOpenStatusIsTrueOrderByProjectPriorityDesc(accountId);
-            if(projects.isEmpty()){
-            throw new EntityNotFoundException("accountId:" + accountId + "인 프로젝트가 없습니다.");
-            }
-            Project project = projects.get(0);
-            Attendance attendance = myPageAttendanceRepository.findFirstByAccount_AccountIdOrderByAttendanceGoWorkDesc(accountId);
-            MainPageDTO mainPageDTO = new MainPageDTO();
-            modelMapper.map(account, mainPageDTO);
-            modelMapper.map(team, mainPageDTO);
-            modelMapper.map(department, mainPageDTO);
-            modelMapper.map(project, mainPageDTO);
-
-            return mainPageDTO;
+        Account account = findAccountDataRepository.findAccountWithHighPriorityProject(accountId);
+        MainPageDTO mainPageDTO = new MainPageDTO();
+        modelMapper.map(account, mainPageDTO);
+        modelMapper.map(account.getTeam(), mainPageDTO);
+        modelMapper.map(account.getTeam().getDepartment(), mainPageDTO);
+        if(!account.getProjects().isEmpty()) {
+            modelMapper.map(account.getProjects().get(0), mainPageDTO);
+        }
+        return mainPageDTO;
     }
 }
