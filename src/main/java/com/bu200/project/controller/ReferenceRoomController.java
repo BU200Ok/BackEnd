@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects/{projectCode}/tasks/{taskType}/{taskTypeDetail}/{taskCode}")
+@RequestMapping("/projects/{projectCode}/tasks/{taskCode}")
 public class ReferenceRoomController {
     private final ReferenceRoomService referenceRoomService;
     private final Tool tool;
@@ -29,8 +29,6 @@ public class ReferenceRoomController {
 
     @GetMapping("/task-files")
     public ResponseEntity<ResponseDTO> getTaskFiles(@PathVariable Long taskCode,
-                                                    @PathVariable Long taskType,
-                                                    @PathVariable String taskTypeDetail,
                                                     @RequestParam Integer page){
         Pageable pageable = PageRequest.of(page, 10);
         List<ReferenceRoomFileDTO> referenceRoomFileDTOS = referenceRoomService.getFiles(taskCode, pageable);
