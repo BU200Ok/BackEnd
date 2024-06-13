@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects/{projectCode}/tasks/{taskType}/{taskTypeDetail}/{taskCode}")
+@RequestMapping("/projects/{projectCode}/tasks/{taskCode}")
 public class TodoListController {
 
     private final TodoListService todoListService;
