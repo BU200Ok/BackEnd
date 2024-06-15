@@ -11,24 +11,24 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-@Entity @Table(name = "todo_list")
+@Entity @Table(name = "todolist")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class TodoList {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "todo_list_code")
+    @Column(name = "todolist_code")
     private Long todoListCode;
 
-    @Column(name = "todo_list_content")
+    @Column(name = "todolist_content")
     private String todoListContent;
 
     @CreationTimestamp
-    @Column(name = "todo_list_start")
+    @Column(name = "todolist_start")
     private Timestamp todoListStart;
 
-    @Column(name = "todo_list_end")
+    @Column(name = "todolist_end")
     private LocalDate todoListEnd;
 
-    @Column(name = "todo_list_status")
+    @Column(name = "todolist_status")
     private Boolean todoListStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)

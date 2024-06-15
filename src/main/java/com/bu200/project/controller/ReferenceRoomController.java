@@ -30,6 +30,7 @@ public class ReferenceRoomController {
     @GetMapping("/task-files")
     public ResponseEntity<ResponseDTO> getTaskFiles(@PathVariable Long taskCode,
                                                     @RequestParam Integer page){
+        System.out.println(1);
         Pageable pageable = PageRequest.of(page, 10);
         List<ReferenceRoomFileDTO> referenceRoomFileDTOS = referenceRoomService.getFiles(taskCode, pageable);
 
