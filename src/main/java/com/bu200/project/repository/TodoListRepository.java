@@ -20,7 +20,7 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
             "and tl.task.taskCode = :taskCode")
     List<TodoListDTO> getTodoListDTOS(@Param("taskCode")Long taskCode);
 
-    @Query("select new com.bu200.project.dto.AddTodoListDTO" +
+    @Query("select new com.bu200.project.dto.TodoListDTO" +
             "(tl.todoListCode, tl.todoListContent, tl.todoListStart, tl.todoListEnd, tl.todoListStatus" +
             ", a.accountName) from TodoList tl " +
             "join tl.account a " +
