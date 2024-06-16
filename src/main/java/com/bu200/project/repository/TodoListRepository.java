@@ -26,7 +26,7 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
             "join tl.account a " +
             "where tl.todoListStatus = true " +
             "and tl.task.taskCode = :taskCode " +
-            "and tl.account.accountId = :accountCode")
+            "and tl.account.accountCode = :accountCode")
     List<TodoListDTO> getMyTodoListsDTOS(@Param("taskCode") Long taskCode,
                                          @Param("accountCode") Long accountCode);
 

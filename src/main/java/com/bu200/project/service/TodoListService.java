@@ -38,7 +38,7 @@ public class TodoListService {
     @Transactional(readOnly = true)
     public List<TodoListDTO> getMyTodoLists(Long taskCode, Long accountCode) {
         List<TodoListDTO> todoListDTOS = todoListRepository.getMyTodoListsDTOS(taskCode, accountCode);
-
+        System.out.println(todoListDTOS);
         return todoListDTOS;
     }
     @Transactional
