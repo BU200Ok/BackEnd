@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class AddTaskPostDTO {
     private Long taskPostCode;
     private String taskPostDetail;  //o
-    private Timestamp taskPostTime; //o
+    private Timestamp taskPostTime;
     private Timestamp taskPostModifyTime;
     private boolean taskPostOpenStatus = true;
 }

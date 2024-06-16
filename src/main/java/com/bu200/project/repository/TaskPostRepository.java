@@ -14,8 +14,8 @@ public interface TaskPostRepository extends JpaRepository<TaskPost, Long> {
             "join fetch tp.account a " +
             "left join fetch a.team t " +
             "left join fetch tp.taskFiles tf " +
-            "where tp.taskPostCode = :taskPostCode")
-    List<TaskPost> findAllTaskPost(@Param("taskPostCode")Long taskPostCode);
+            "where tp.task.taskCode = :taskCode")
+    List<TaskPost> findAllTaskPost(@Param("taskCode")Long taskCode);
 
     TaskPost findTaskPostByTaskPostCode(Long taskPostCode);
 }
