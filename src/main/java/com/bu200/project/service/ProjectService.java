@@ -64,7 +64,7 @@ public class ProjectService {
     public boolean hasAuthorityCheck(Long accountCode, Long projectCode) {
         AccountProject accountIsInProject = accountProjectRepository.findByAccount_AccountCodeAndProject_ProjectCode(accountCode, projectCode);
         Account findAccount = accountRepository.findByAccountCode(accountCode);
-        if(accountIsInProject != null || findAccount.getAccountRole() == "ROLE_ADMIN") return true;
+        if(accountIsInProject != null || findAccount.getAccountRole().equals("ROLE_ADMIN")) return true;
         return false;
     }
 }
