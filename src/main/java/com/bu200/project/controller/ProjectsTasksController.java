@@ -31,7 +31,11 @@ public class ProjectsTasksController {
     }
     //프로젝트의 정보를 가져온다.
     @GetMapping
-    public ResponseEntity<ResponseDTO> project(@PathVariable Long projectCode){
+    public ResponseEntity<ResponseDTO> project(@PathVariable Long projectCode,
+                                               @AuthenticationPrincipal CustomUserDetails user){
+            if (!projectService.hasAuthorityCheck(Long.valueOf(user.getCode()), projectCode)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseDTO(HttpStatus.CONFLICT, "권한이 없습니다.", null));
+            }
         ProjectDetailDTO projectDetailDTO = projectService.projectDetail(projectCode);
         return tool.res(HttpStatus.OK, "성공적 프로젝트 정보", projectDetailDTO);
     }
@@ -52,12 +56,12 @@ public class ProjectsTasksController {
     }
 
     @PostMapping("/accounts/add")
-    public ResponseEntity<ResponseDTO> addAccountProject(@RequestBody AddAccountProjectRequestDTO addAccountProjectRequestDTO,
+    public ResponseEntity<ResponseDTO> addAccountProject(@RequestParam String memberName,
                                                          @PathVariable Long projectCode){
-        if(projectService.checkDuplicateAccountProject(addAccountProjectRequestDTO, projectCode)){
+        if(projectService.checkDuplicateAccountProject(memberName, projectCode)){
             return tool.resErr("이미 참여중입니다.");
         }
-        AddAccountProjectResponseDTO addAccountProjectResponseDTO = projectService.addAccount(addAccountProjectRequestDTO, projectCode);
+        AddAccountProjectResponseDTO addAccountProjectResponseDTO = projectService.addAccount(memberName, projectCode);
 
         return tool.res(HttpStatus.OK, "참여 완료", addAccountProjectResponseDTO);
     }

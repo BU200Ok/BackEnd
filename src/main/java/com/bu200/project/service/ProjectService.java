@@ -42,8 +42,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public AddAccountProjectResponseDTO addAccount(AddAccountProjectRequestDTO addAccountProjectRequestDTO, Long projectCode) {
-        Account findAccount = accountRepository.findByAccountId(addAccountProjectRequestDTO.getAccountId());
+    public AddAccountProjectResponseDTO addAccount(String accountId, Long projectCode) {
+        Account findAccount = accountRepository.findByAccountId(accountId);
         Project findProject = projectRepository.findByProjectCode(projectCode);
 
         accountProjectRepository.save(new AccountProject(null, findAccount, findProject));
@@ -51,13 +51,20 @@ public class ProjectService {
         return modelMapper.map(findAccount, AddAccountProjectResponseDTO.class);
     }
 
-    public boolean checkDuplicateAccountProject(AddAccountProjectRequestDTO addAccountProjectRequestDTO, Long projectCode){
+    public boolean checkDuplicateAccountProject(String accountId, Long projectCode){
         AccountProject findAccountProject = accountProjectRepository.findByAccount_AccountIdAndProject_ProjectCode
-                (addAccountProjectRequestDTO.getAccountId(), projectCode);
+                (accountId, projectCode);
 
         if(findAccountProject != null){
             return true;
         }
+        return false;
+    }
+
+    public boolean hasAuthorityCheck(Long accountCode, Long projectCode) {
+        AccountProject accountIsInProject = accountProjectRepository.findByAccount_AccountCodeAndProject_ProjectCode(accountCode, projectCode);
+        Account findAccount = accountRepository.findByAccountCode(accountCode);
+        if(accountIsInProject != null || findAccount.getAccountRole() == "ROLE_ADMIN") return true;
         return false;
     }
 }
